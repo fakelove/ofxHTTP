@@ -46,8 +46,9 @@ public:
         UNAUTHORIZED,
         NO_CREDENTIALS
     };
-    
+
 };
 
 
 } } // namespace ofx::HTTP
+

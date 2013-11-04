@@ -23,7 +23,7 @@
 // =============================================================================
 
 
-#include "ofx/HTTP/Client/Context.h"
+#include "ofx/HTTP/Client/ClientContext.h"
 
 
 namespace ofx {
@@ -36,14 +36,14 @@ ClientContext::ClientContext()
 }
 
 //------------------------------------------------------------------------------
-ClientContext::ClientContext(SessionSettings& sessionSettings) :
+ClientContext::ClientContext(SessionSettings& sessionSettings):
     _sessionSettings(sessionSettings)
 {
 }
 
 //------------------------------------------------------------------------------
 ClientContext::ClientContext(SessionSettings& sessionSettings,
-                             CredentialStore& credentialStore) :
+                             CredentialStore& credentialStore):
     _sessionSettings(sessionSettings),
     _credentialStore(credentialStore)
 {
@@ -52,7 +52,7 @@ ClientContext::ClientContext(SessionSettings& sessionSettings,
 //------------------------------------------------------------------------------
 ClientContext::ClientContext(SessionSettings& sessionSettings,
                              CredentialStore& credentialStore,
-                             CookieStore& cookieStore) :
+                             CookieStore& cookieStore):
     _sessionSettings(sessionSettings),
     _credentialStore(credentialStore),
     _cookieStore(cookieStore)
@@ -73,6 +73,7 @@ ClientContext& ClientContext::operator = (ClientContext& that)
     _sessionSettings = that._sessionSettings;
     _credentialStore = that._credentialStore;
     _cookieStore     = that._cookieStore;
+   return *this;
 }
 
 //------------------------------------------------------------------------------
