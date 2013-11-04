@@ -26,45 +26,43 @@
 #pragma once
 
 
-#include <string>
-#include "Poco/Net/HTTPServerRequest.h"
-#include "Poco/Net/HTTPRequestHandler.h"
-#include "Poco/RegularExpression.h"
-#include "Poco/URI.h"
-#include "ofLog.h"
-#include "ofx/HTTP/AbstractTypes.h"
-#include "ofx/HTTP/Server/BaseRouteHandler.h"
-#include "ofx/HTTP/Server/BaseRouteSettings.h"
+#include "BaseRequest.h"
 
 
 namespace ofx {
 namespace HTTP {
+namespace Request {
 
 
-class BaseRoute: public AbstractRoute
+class Post: public BaseRequest
 {
 public:
-    BaseRoute();
+    Post(const Poco::URI& uri);
+    Post(const Poco::URI& uri, const std::string& httpVersion);
+    
+    virtual ~Post();
+    
+    void addFormFile(const std::string& fieldName, const std::string& filePath);
+    void addFormFiles(const Poco::Net::NameValueCollection& nameValueMap);
+    void addFormFiles(const std::map<std::string,std::string>&  nameValueMap);
+    void addFormFiles(const std::multimap<std::string,std::string>&  nameValueMap);
 
-    virtual ~BaseRoute();
+    bool hasFormFiles() const;
 
-    virtual std::string getRoutePathPattern() const;
+    void clearFormFiles();
+    
+    const Poco::Net::NameValueCollection& getFormFiles() const;
 
-    virtual bool canHandleRequest(const Poco::Net::HTTPServerRequest& request,
-                                  bool isSecurePort) const;
+protected:
+    virtual void prepareRequest(Poco::Net::HTTPClientSession& session,
+                                Poco::Net::HTTPRequest& request,
+                                Poco::Net::HTTPResponse& response);
 
-    virtual Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request);
+    Poco::Net::NameValueCollection _formFiles;
 
-    virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
-                               Poco::Net::HTTPServerResponse& response);
-
-    virtual void stop();
-
-private:
-    BaseRoute(const BaseRoute&);
-	BaseRoute& operator = (const BaseRoute&);
+    friend class Client;
 
 };
 
 
-} } // namespace ofx::HTTP
+} } } // ofx::HTTP::Request

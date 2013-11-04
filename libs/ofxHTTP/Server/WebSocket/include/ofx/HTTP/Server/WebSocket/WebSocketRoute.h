@@ -26,27 +26,27 @@
 #pragma once
 
 
-#include <string>
-#include "Poco/Net/HTTPServerRequest.h"
-#include "Poco/Net/HTTPRequestHandler.h"
-#include "Poco/RegularExpression.h"
-#include "Poco/URI.h"
-#include "ofLog.h"
 #include "ofx/HTTP/AbstractTypes.h"
-#include "ofx/HTTP/Server/BaseRouteHandler.h"
-#include "ofx/HTTP/Server/BaseRouteSettings.h"
+#include "ofx/HTTP/Server/WebSocket/WebSocketRouteHandler.h"
+#include "ofx/HTTP/Server/WebSocket/WebSocketRouteInterface.h"
+#include "ofx/HTTP/Server/WebSocket/WebSocketEvents.h"
 
 
 namespace ofx {
 namespace HTTP {
 
 
-class BaseRoute: public AbstractRoute
+class WebSocketRoute:
+    public BaseWebSocketSessionManager,
+    public WebSocketRouteInterface
 {
 public:
-    BaseRoute();
+    typedef std::shared_ptr<WebSocketRoute> SharedPtr;
+    typedef std::weak_ptr<WebSocketRoute>   WeakPtr;
+    typedef WebSocketRouteSettings Settings;
 
-    virtual ~BaseRoute();
+    WebSocketRoute(const Settings& settings);
+    virtual ~WebSocketRoute();
 
     virtual std::string getRoutePathPattern() const;
 
@@ -55,15 +55,19 @@ public:
 
     virtual Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request);
 
-    virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
-                               Poco::Net::HTTPServerResponse& response);
-
     virtual void stop();
 
-private:
-    BaseRoute(const BaseRoute&);
-	BaseRoute& operator = (const BaseRoute&);
+    WebSocketRouteSettings getSettings() const;
+    BaseWebSocketSessionManager& getSessionManagerRef();
 
+    static SharedPtr makeShared(const Settings& settings)
+    {
+        return SharedPtr(new WebSocketRoute(settings));
+    }
+
+private:
+    Settings _settings;
+    
 };
 
 

@@ -23,48 +23,29 @@
 // =============================================================================
 
 
-#pragma once
-
-
-#include <string>
-#include "Poco/Net/HTTPServerRequest.h"
-#include "Poco/Net/HTTPRequestHandler.h"
-#include "Poco/RegularExpression.h"
-#include "Poco/URI.h"
-#include "ofLog.h"
-#include "ofx/HTTP/AbstractTypes.h"
-#include "ofx/HTTP/Server/BaseRouteHandler.h"
-#include "ofx/HTTP/Server/BaseRouteSettings.h"
+#include "ofx/HTTP/Server/WebSocket/BasicWebSocketServer.h"
 
 
 namespace ofx {
 namespace HTTP {
 
 
-class BaseRoute: public AbstractRoute
+BasicWebSocketServer::BasicWebSocketServer(const Settings& settings):
+    BasicServer(settings),
+    _webSocketRoute(WebSocketRoute::makeShared(settings))
 {
-public:
-    BaseRoute();
+    addRoute(_webSocketRoute);
+}
 
-    virtual ~BaseRoute();
+BasicWebSocketServer::~BasicWebSocketServer()
+{
+    removeRoute(_webSocketRoute);
+}
 
-    virtual std::string getRoutePathPattern() const;
-
-    virtual bool canHandleRequest(const Poco::Net::HTTPServerRequest& request,
-                                  bool isSecurePort) const;
-
-    virtual Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request);
-
-    virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
-                               Poco::Net::HTTPServerResponse& response);
-
-    virtual void stop();
-
-private:
-    BaseRoute(const BaseRoute&);
-	BaseRoute& operator = (const BaseRoute&);
-
-};
+WebSocketRoute::SharedPtr BasicWebSocketServer::getWebSocketRoute()
+{
+    return _webSocketRoute;
+}
 
 
 } } // namespace ofx::HTTP

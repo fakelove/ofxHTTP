@@ -26,45 +26,24 @@
 #pragma once
 
 
-#include <string>
-#include "Poco/Net/HTTPServerRequest.h"
-#include "Poco/Net/HTTPRequestHandler.h"
-#include "Poco/RegularExpression.h"
-#include "Poco/URI.h"
-#include "ofLog.h"
-#include "ofx/HTTP/AbstractTypes.h"
-#include "ofx/HTTP/Server/BaseRouteHandler.h"
-#include "ofx/HTTP/Server/BaseRouteSettings.h"
+#include "ofMain.h"
 
 
-namespace ofx {
-namespace HTTP {
-
-
-class BaseRoute: public AbstractRoute
+class ofApp: public ofBaseApp
 {
 public:
-    BaseRoute();
+    void setup();
+    void update();
+    void draw();
 
-    virtual ~BaseRoute();
-
-    virtual std::string getRoutePathPattern() const;
-
-    virtual bool canHandleRequest(const Poco::Net::HTTPServerRequest& request,
-                                  bool isSecurePort) const;
-
-    virtual Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request);
-
-    virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
-                               Poco::Net::HTTPServerResponse& response);
-
-    virtual void stop();
-
-private:
-    BaseRoute(const BaseRoute&);
-	BaseRoute& operator = (const BaseRoute&);
-
+    void keyPressed(int key);
+    void keyReleased(int key);
+    void mouseMoved(int x, int y);
+    void mouseDragged(int x, int y, int button);
+    void mousePressed(int x, int y, int button);
+    void mouseReleased(int x, int y, int button);
+    void windowResized(int w, int h);
+    void dragEvent(ofDragInfo dragInfo);
+    void gotMessage(ofMessage msg);
+    
 };
-
-
-} } // namespace ofx::HTTP

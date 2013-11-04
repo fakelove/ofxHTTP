@@ -26,45 +26,46 @@
 #pragma once
 
 
-#include <string>
-#include "Poco/Net/HTTPServerRequest.h"
-#include "Poco/Net/HTTPRequestHandler.h"
-#include "Poco/RegularExpression.h"
-#include "Poco/URI.h"
-#include "ofLog.h"
-#include "ofx/HTTP/AbstractTypes.h"
-#include "ofx/HTTP/Server/BaseRouteHandler.h"
-#include "ofx/HTTP/Server/BaseRouteSettings.h"
+#include "ofConstants.h"
+#include "ofx/HTTP/ResponseStream.h"
 
 
 namespace ofx {
 namespace HTTP {
+    
 
-
-class BaseRoute: public AbstractRoute
+class StreamUtils
 {
 public:
-    BaseRoute();
+    static std::streamsize consume(ResponseStream* responseStream,
+                                   std::size_t bufferSize = DEFAULT_BUFFER_SIZE);
 
-    virtual ~BaseRoute();
+    static std::streamsize consume(std::istream& istr,
+                                   std::size_t bufferSize = DEFAULT_BUFFER_SIZE);
+    
+    static std::streamsize copyToString(ResponseStream* responseStream,
+                                        std::string& str,
+                                        std::size_t bufferSize = DEFAULT_BUFFER_SIZE);
 
-    virtual std::string getRoutePathPattern() const;
+    static std::streamsize copyToString(std::istream& istr,
+                                        std::string& str,
+                                        std::size_t bufferSize = DEFAULT_BUFFER_SIZE);
+    
+    static std::streamsize copyTo(ResponseStream* responseStream,
+                                  std::ostream& ostr,
+                                  std::size_t bufferSize = DEFAULT_BUFFER_SIZE);
 
-    virtual bool canHandleRequest(const Poco::Net::HTTPServerRequest& request,
-                                  bool isSecurePort) const;
+    static std::streamsize copyTo(std::istream& istr,
+                                  std::ostream& ostr,
+                                  std::size_t bufferSize = DEFAULT_BUFFER_SIZE);
 
-    virtual Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request);
-
-    virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
-                               Poco::Net::HTTPServerResponse& response);
-
-    virtual void stop();
-
-private:
-    BaseRoute(const BaseRoute&);
-	BaseRoute& operator = (const BaseRoute&);
+protected:
+    enum
+    {
+        DEFAULT_BUFFER_SIZE = 8192
+    };
 
 };
 
-
+    
 } } // namespace ofx::HTTP

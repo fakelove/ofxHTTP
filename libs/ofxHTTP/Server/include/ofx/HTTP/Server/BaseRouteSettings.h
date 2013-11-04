@@ -27,7 +27,7 @@
 
 
 #include <string>
-#include "ofx/HTTP/Types/AbstractTypes.h"
+#include "ofx/HTTP/AbstractTypes.h"
 
 
 namespace ofx {

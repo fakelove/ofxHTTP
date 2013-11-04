@@ -26,45 +26,43 @@
 #pragma once
 
 
-#include <string>
-#include "Poco/Net/HTTPServerRequest.h"
-#include "Poco/Net/HTTPRequestHandler.h"
-#include "Poco/RegularExpression.h"
-#include "Poco/URI.h"
-#include "ofLog.h"
-#include "ofx/HTTP/AbstractTypes.h"
-#include "ofx/HTTP/Server/BaseRouteHandler.h"
-#include "ofx/HTTP/Server/BaseRouteSettings.h"
+#include "BaseRequest.h"
 
 
 namespace ofx {
 namespace HTTP {
+namespace Request {
 
 
-class BaseRoute: public AbstractRoute
+class Put: public BaseRequest
 {
 public:
-    BaseRoute();
+    Put(const Poco::URI& uri);
+    Put(const Poco::URI& uri,
+        const std::string& httpVersion);
+    
+    virtual ~Put();
+    
+    void addFile(const std::string& filename);
+    
+    void setContentRange(std::size_t startByte,
+                         std::size_t endByte = std::numeric_limits<std::size_t>::max());
 
-    virtual ~BaseRoute();
+    void setContentType(const std::string& contentType);
+    
+protected:
+    virtual void prepareRequest(Poco::Net::HTTPRequest& request) const;
 
-    virtual std::string getRoutePathPattern() const;
+    std::size_t _startByte;
+    std::size_t _endByte;
 
-    virtual bool canHandleRequest(const Poco::Net::HTTPServerRequest& request,
-                                  bool isSecurePort) const;
+    std::string _contentType;
+    
+    ofFile _file;
 
-    virtual Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request);
-
-    virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
-                               Poco::Net::HTTPServerResponse& response);
-
-    virtual void stop();
-
-private:
-    BaseRoute(const BaseRoute&);
-	BaseRoute& operator = (const BaseRoute&);
+    friend class Client;
 
 };
 
-
-} } // namespace ofx::HTTP
+    
+} } } // ofx::HTTP::Request

@@ -23,48 +23,11 @@
 // =============================================================================
 
 
-#pragma once
+#include "ofApp.h"
 
 
-#include <string>
-#include "Poco/Net/HTTPServerRequest.h"
-#include "Poco/Net/HTTPRequestHandler.h"
-#include "Poco/RegularExpression.h"
-#include "Poco/URI.h"
-#include "ofLog.h"
-#include "ofx/HTTP/AbstractTypes.h"
-#include "ofx/HTTP/Server/BaseRouteHandler.h"
-#include "ofx/HTTP/Server/BaseRouteSettings.h"
-
-
-namespace ofx {
-namespace HTTP {
-
-
-class BaseRoute: public AbstractRoute
+int main()
 {
-public:
-    BaseRoute();
-
-    virtual ~BaseRoute();
-
-    virtual std::string getRoutePathPattern() const;
-
-    virtual bool canHandleRequest(const Poco::Net::HTTPServerRequest& request,
-                                  bool isSecurePort) const;
-
-    virtual Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request);
-
-    virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
-                               Poco::Net::HTTPServerResponse& response);
-
-    virtual void stop();
-
-private:
-    BaseRoute(const BaseRoute&);
-	BaseRoute& operator = (const BaseRoute&);
-
-};
-
-
-} } // namespace ofx::HTTP
+    ofSetupOpenGL(1280,720,OF_WINDOW);
+    ofRunApp(new ofApp());
+}

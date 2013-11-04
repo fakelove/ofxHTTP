@@ -23,48 +23,41 @@
 // =============================================================================
 
 
-#pragma once
-
-
-#include <string>
-#include "Poco/Net/HTTPServerRequest.h"
-#include "Poco/Net/HTTPRequestHandler.h"
-#include "Poco/RegularExpression.h"
-#include "Poco/URI.h"
-#include "ofLog.h"
-#include "ofx/HTTP/AbstractTypes.h"
-#include "ofx/HTTP/Server/BaseRouteHandler.h"
-#include "ofx/HTTP/Server/BaseRouteSettings.h"
+#include "ofx/HTTP/Server/WebSocket/WebSocketRouteHandler.h"
 
 
 namespace ofx {
 namespace HTTP {
 
 
-class BaseRoute: public AbstractRoute
+//------------------------------------------------------------------------------
+WebSocketRouteHandler::WebSocketRouteHandler(WebSocketRouteInterface& parent):
+    BaseRouteHandler(parent),
+    _parent(parent)
 {
-public:
-    BaseRoute();
+}
 
-    virtual ~BaseRoute();
+//------------------------------------------------------------------------------
+WebSocketRouteHandler::~WebSocketRouteHandler()
+{
+}
 
-    virtual std::string getRoutePathPattern() const;
+//------------------------------------------------------------------------------
+void WebSocketRouteHandler::handleRequest(Poco::Net::HTTPServerRequest& request,
+                                          Poco::Net::HTTPServerResponse& response)
+{
+    WebSocketConnection connection(_parent);
+    _parent.getSessionManagerRef().registerWebSocketConnection(&connection);
+    connection.handleRequest(request,response);
+    _parent.getSessionManagerRef().unregisterWebSocketConnection(&connection);
+    // done!
+}
 
-    virtual bool canHandleRequest(const Poco::Net::HTTPServerRequest& request,
-                                  bool isSecurePort) const;
-
-    virtual Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request);
-
-    virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
-                               Poco::Net::HTTPServerResponse& response);
-
-    virtual void stop();
-
-private:
-    BaseRoute(const BaseRoute&);
-	BaseRoute& operator = (const BaseRoute&);
-
-};
+//------------------------------------------------------------------------------
+void WebSocketRouteHandler::close()
+{
+    _parent.getSessionManagerRef().close();
+}
 
 
 } } // namespace ofx::HTTP

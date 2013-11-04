@@ -26,44 +26,44 @@
 #pragma once
 
 
-#include <string>
-#include "Poco/Net/HTTPServerRequest.h"
-#include "Poco/Net/HTTPRequestHandler.h"
-#include "Poco/RegularExpression.h"
-#include "Poco/URI.h"
-#include "ofLog.h"
-#include "ofx/HTTP/AbstractTypes.h"
-#include "ofx/HTTP/Server/BaseRouteHandler.h"
-#include "ofx/HTTP/Server/BaseRouteSettings.h"
+#include "ofx/HTTP/Server/FileSystem/BasicFileSystemServer.h"
+#include "ofx/HTTP/Server/FileUpload/FileUploadRoute.h"
+#include "ofx/HTTP/Server/FileUpload/FileUploadRouteSettings.h"
+#include "ofx/HTTP/Server/FileUpload/FileUploadRouteEvents.h"
 
 
 namespace ofx {
 namespace HTTP {
 
 
-class BaseRoute: public AbstractRoute
+class BasicFileUploadServerSettings:
+    public FileUploadRouteSettings,
+    public BasicServerSettings
+{
+};
+
+
+class BasicFileUploadServer: public BasicServer
 {
 public:
-    BaseRoute();
+    typedef std::shared_ptr<BasicFileUploadServer> SharedPtr;
+    typedef std::weak_ptr<BasicFileUploadServer>   WeakPtr;
+    typedef BasicFileUploadServerSettings          Settings;
 
-    virtual ~BaseRoute();
+    BasicFileUploadServer(const Settings& settings = Settings());
+    virtual ~BasicFileUploadServer();
 
-    virtual std::string getRoutePathPattern() const;
+    FileUploadRoute::SharedPtr getFileUploadRoute();
 
-    virtual bool canHandleRequest(const Poco::Net::HTTPServerRequest& request,
-                                  bool isSecurePort) const;
+    // this method is a hack replacement for std::make_shared<BasicServer>(...);
+    static SharedPtr makeShared(const Settings& settings = Settings())
+    {
+        return SharedPtr(new BasicFileUploadServer(settings));
+    }
 
-    virtual Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request);
-
-    virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
-                               Poco::Net::HTTPServerResponse& response);
-
-    virtual void stop();
-
-private:
-    BaseRoute(const BaseRoute&);
-	BaseRoute& operator = (const BaseRoute&);
-
+protected:
+    FileUploadRoute::SharedPtr _fileUploadRoute;
+    
 };
 
 

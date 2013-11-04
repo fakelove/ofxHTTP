@@ -1,6 +1,6 @@
 // =============================================================================
 //
-// Copyright (c) 2013 Christopher Baker <http://christopherbaker.net>
+// Copyright (c) 2012-2013 Christopher Baker <http://christopherbaker.net>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,47 +22,51 @@
 //
 // =============================================================================
 
-
 #pragma once
 
 
-#include <string>
-#include "Poco/Net/HTTPServerRequest.h"
-#include "Poco/Net/HTTPRequestHandler.h"
-#include "Poco/RegularExpression.h"
-#include "Poco/URI.h"
-#include "ofLog.h"
-#include "ofx/HTTP/AbstractTypes.h"
-#include "ofx/HTTP/Server/BaseRouteHandler.h"
-#include "ofx/HTTP/Server/BaseRouteSettings.h"
+#include "ofx/HTTP/Server/FileSystem/BasicFileSystemServer.h"
+#include "ofx/HTTP/Server/IPVideo/IPVideoRoute.h"
+#include "ofx/HTTP/Server/IPVideo/IPVideoRouteSettings.h"
 
 
 namespace ofx {
 namespace HTTP {
 
 
-class BaseRoute: public AbstractRoute
+class BasicIPVideoServerSettings:
+    public IPVideoRouteSettings,
+    public BasicServerSettings
+{
+};
+
+
+class BasicIPVideoServer: public BasicServer
 {
 public:
-    BaseRoute();
+    typedef std::shared_ptr<BasicIPVideoServer> SharedPtr;
+    typedef std::weak_ptr<BasicIPVideoServer>   WeakPtr;
+    typedef BasicIPVideoServerSettings Settings;
 
-    virtual ~BaseRoute();
+    BasicIPVideoServer(const Settings& settings = Settings());
+    virtual ~BasicIPVideoServer();
 
-    virtual std::string getRoutePathPattern() const;
 
-    virtual bool canHandleRequest(const Poco::Net::HTTPServerRequest& request,
-                                  bool isSecurePort) const;
+    void send(ofPixels& pix);
 
-    virtual Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request);
 
-    virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
-                               Poco::Net::HTTPServerResponse& response);
+    std::size_t getNumConnections() const
+    {
+        return _ipVideoRoute->getNumConnections();
+    }
 
-    virtual void stop();
+    static SharedPtr makeShared(const Settings& settings = Settings())
+    {
+        return SharedPtr(new BasicIPVideoServer(settings));
+    }
 
-private:
-    BaseRoute(const BaseRoute&);
-	BaseRoute& operator = (const BaseRoute&);
+protected:
+    IPVideoRoute::SharedPtr _ipVideoRoute;
 
 };
 

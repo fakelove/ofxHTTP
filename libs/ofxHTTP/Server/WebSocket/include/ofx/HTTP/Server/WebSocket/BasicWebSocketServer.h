@@ -26,45 +26,43 @@
 #pragma once
 
 
-#include <string>
-#include "Poco/Net/HTTPServerRequest.h"
-#include "Poco/Net/HTTPRequestHandler.h"
-#include "Poco/RegularExpression.h"
-#include "Poco/URI.h"
-#include "ofLog.h"
-#include "ofx/HTTP/AbstractTypes.h"
-#include "ofx/HTTP/Server/BaseRouteHandler.h"
-#include "ofx/HTTP/Server/BaseRouteSettings.h"
+#include "ofx/HTTP/Server/FileSystem/BasicFileSystemServer.h"
+#include "ofx/HTTP/Server/WebSocket/WebSocketRoute.h"
+#include "ofx/HTTP/Server/WebSocket/WebSocketRouteSettings.h"
 
 
 namespace ofx {
 namespace HTTP {
 
 
-class BaseRoute: public AbstractRoute
+class BasicWebSocketServerSettings:
+    public WebSocketRouteSettings,
+    public BasicServerSettings
 {
-public:
-    BaseRoute();
-
-    virtual ~BaseRoute();
-
-    virtual std::string getRoutePathPattern() const;
-
-    virtual bool canHandleRequest(const Poco::Net::HTTPServerRequest& request,
-                                  bool isSecurePort) const;
-
-    virtual Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request);
-
-    virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
-                               Poco::Net::HTTPServerResponse& response);
-
-    virtual void stop();
-
-private:
-    BaseRoute(const BaseRoute&);
-	BaseRoute& operator = (const BaseRoute&);
-
 };
 
 
+class BasicWebSocketServer: public BasicServer
+{
+public:
+    typedef std::shared_ptr<BasicWebSocketServer> SharedPtr;
+    typedef std::weak_ptr<BasicWebSocketServer>   WeakPtr;
+    typedef BasicWebSocketServerSettings          Settings;
+
+    BasicWebSocketServer(const Settings& settings = Settings());
+    virtual ~BasicWebSocketServer();
+
+    WebSocketRoute::SharedPtr getWebSocketRoute();
+
+    // this method is a hack replacement for std::make_shared<BasicServer>(...);
+    static SharedPtr makeShared(const Settings& settings = Settings())
+    {
+        return SharedPtr(new BasicWebSocketServer(settings));
+    }
+private:
+    WebSocketRoute::SharedPtr _webSocketRoute;
+    
+};
+
+    
 } } // namespace ofx::HTTP

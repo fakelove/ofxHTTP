@@ -1,6 +1,6 @@
 // =============================================================================
 //
-// Copyright (c) 2013 Christopher Baker <http://christopherbaker.net>
+// Copyright (c) 2012-2013 Christopher Baker <http://christopherbaker.net>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,44 +26,44 @@
 #pragma once
 
 
-#include <string>
-#include "Poco/Net/HTTPServerRequest.h"
-#include "Poco/Net/HTTPRequestHandler.h"
-#include "Poco/RegularExpression.h"
-#include "Poco/URI.h"
-#include "ofLog.h"
-#include "ofx/HTTP/AbstractTypes.h"
-#include "ofx/HTTP/Server/BaseRouteHandler.h"
-#include "ofx/HTTP/Server/BaseRouteSettings.h"
+#include "ofFileUtils.h"
+#include "ofImage.h"
+#include "ofx/HTTP/Server/IPVideo/IPVideoFrameSettings.h"
 
 
 namespace ofx {
 namespace HTTP {
 
 
-class BaseRoute: public AbstractRoute
+class IPVideoFrame
 {
 public:
-    BaseRoute();
+    typedef std::shared_ptr<IPVideoFrame>   SharedPtr;
+    typedef std::weak_ptr<IPVideoFrame>     WeakPtr;
+    typedef IPVideoFrameSettings            Settings;
 
-    virtual ~BaseRoute();
+    IPVideoFrame(const Settings& settings,
+                 unsigned long long timestamp,
+                 const ofBuffer& buffer);
+    
+    virtual ~IPVideoFrame();
 
-    virtual std::string getRoutePathPattern() const;
+    Settings getSettings() const;
+    unsigned long long getTimestamp() const;
 
-    virtual bool canHandleRequest(const Poco::Net::HTTPServerRequest& request,
-                                  bool isSecurePort) const;
+    ofBuffer& getBufferRef();
 
-    virtual Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request);
-
-    virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
-                               Poco::Net::HTTPServerResponse& response);
-
-    virtual void stop();
+    static SharedPtr makeShared(const Settings& settings,
+                                unsigned long long timestamp,
+                                const ofBuffer& buffer)
+    {
+        return SharedPtr(new IPVideoFrame(settings,timestamp,buffer));
+    }
 
 private:
-    BaseRoute(const BaseRoute&);
-	BaseRoute& operator = (const BaseRoute&);
-
+    Settings _settings;
+    ofBuffer _buffer;
+    unsigned long long _timestamp;
 };
 
 

@@ -26,45 +26,49 @@
 #pragma once
 
 
-#include <string>
-#include "Poco/Net/HTTPServerRequest.h"
-#include "Poco/Net/HTTPRequestHandler.h"
-#include "Poco/RegularExpression.h"
-#include "Poco/URI.h"
+#include <queue>
+#include "Poco/Exception.h"
+#include "Poco/Timespan.h"
+#include "Poco/Net/Socket.h"
+#include "Poco/Net/WebSocket.h"
+#include "Poco/Net/NetException.h"
+#include "ofFileUtils.h"
 #include "ofLog.h"
 #include "ofx/HTTP/AbstractTypes.h"
 #include "ofx/HTTP/Server/BaseRouteHandler.h"
-#include "ofx/HTTP/Server/BaseRouteSettings.h"
+#include "ofx/HTTP/Server/WebSocket/BaseWebSocketSessionManager.h"
+#include "ofx/HTTP/Server/WebSocket/WebSocketConnection.h"
+#include "ofx/HTTP/Server/WebSocket/WebSocketRouteSettings.h"
+#include "ofx/HTTP/Server/WebSocket/WebSocketRouteInterface.h"
+#include "ofx/HTTP/Server/WebSocket/WebSocketEvents.h"
+#include "ofx/HTTP/Server/WebSocket/WebSocketFrame.h"
+#include "ofx/HTTP/HeaderUtils.h"
 
 
 namespace ofx {
 namespace HTTP {
 
 
-class BaseRoute: public AbstractRoute
+// TODO: move default constants to enum
+class WebSocketRouteHandler: public BaseRouteHandler
 {
 public:
-    BaseRoute();
+    typedef WebSocketRouteSettings Settings;
 
-    virtual ~BaseRoute();
-
-    virtual std::string getRoutePathPattern() const;
-
-    virtual bool canHandleRequest(const Poco::Net::HTTPServerRequest& request,
-                                  bool isSecurePort) const;
-
-    virtual Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request);
+    WebSocketRouteHandler(WebSocketRouteInterface& parent);
+    
+    virtual ~WebSocketRouteHandler();
 
     virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
                                Poco::Net::HTTPServerResponse& response);
 
-    virtual void stop();
+    virtual void close();
 
 private:
-    BaseRoute(const BaseRoute&);
-	BaseRoute& operator = (const BaseRoute&);
+    WebSocketRouteInterface& _parent;
 
 };
 
 
 } } // namespace ofx::HTTP
+            

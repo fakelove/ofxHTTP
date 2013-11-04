@@ -1,6 +1,6 @@
 // =============================================================================
 //
-// Copyright (c) 2013 Christopher Baker <http://christopherbaker.net>
+// Copyright (c) 2012-2013 Christopher Baker <http://christopherbaker.net>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,48 +23,79 @@
 // =============================================================================
 
 
-#pragma once
-
-
-#include <string>
-#include "Poco/Net/HTTPServerRequest.h"
-#include "Poco/Net/HTTPRequestHandler.h"
-#include "Poco/RegularExpression.h"
-#include "Poco/URI.h"
-#include "ofLog.h"
-#include "ofx/HTTP/AbstractTypes.h"
-#include "ofx/HTTP/Server/BaseRouteHandler.h"
-#include "ofx/HTTP/Server/BaseRouteSettings.h"
+#include "ofx/HTTP/Server/IPVideo/IPVideoFrameQueue.h"
 
 
 namespace ofx {
 namespace HTTP {
 
 
-class BaseRoute: public AbstractRoute
+IPVideoFrameQueue::IPVideoFrameQueue(std::size_t maxSize):
+    _maxSize(maxSize)
 {
-public:
-    BaseRoute();
+}
 
-    virtual ~BaseRoute();
+IPVideoFrameQueue::~IPVideoFrameQueue()
+{
+}
 
-    virtual std::string getRoutePathPattern() const;
+IPVideoFrame::SharedPtr IPVideoFrameQueue::pop()
+{
+    IPVideoFrame::SharedPtr frame;
 
-    virtual bool canHandleRequest(const Poco::Net::HTTPServerRequest& request,
-                                  bool isSecurePort) const;
+    ofScopedLock lock(_mutex);
 
-    virtual Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request);
+    if(!_frames.empty())
+    {
+        frame = _frames.front();
+        _frames.pop_front();
+        return frame;
+    }
+    else
+    {
+        return frame;
+    }
+}
 
-    virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
-                               Poco::Net::HTTPServerResponse& response);
+void IPVideoFrameQueue::push(IPVideoFrame::SharedPtr frame)
+{
+    ofScopedLock lock(_mutex);
 
-    virtual void stop();
+    _frames.push_back(frame);
 
-private:
-    BaseRoute(const BaseRoute&);
-	BaseRoute& operator = (const BaseRoute&);
+    while(_frames.size() > _maxSize)
+    {
+        _frames.pop_front();
+    }
+}
 
-};
+std::size_t IPVideoFrameQueue::getMaxSize() const
+{
+    ofScopedLock lock(_mutex);
+    return _maxSize;
+}
 
+void IPVideoFrameQueue::setMaxSize(std::size_t maxSize)
+{
+    ofScopedLock lock(_mutex);
+    _maxSize = maxSize;
+    while(_frames.size() > _maxSize)
+    {
+        _frames.pop_front();
+    }
+}
 
+std::size_t IPVideoFrameQueue::size() const
+{
+    ofScopedLock lock(_mutex);
+    return _frames.size();
+}
+
+bool IPVideoFrameQueue::empty() const
+{
+    ofScopedLock lock(_mutex);
+    return _frames.empty();
+}
+
+    
 } } // namespace ofx::HTTP

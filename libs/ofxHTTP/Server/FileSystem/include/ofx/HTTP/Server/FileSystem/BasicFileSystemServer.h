@@ -26,43 +26,38 @@
 #pragma once
 
 
-#include <string>
-#include "Poco/Net/HTTPServerRequest.h"
-#include "Poco/Net/HTTPRequestHandler.h"
-#include "Poco/RegularExpression.h"
-#include "Poco/URI.h"
-#include "ofLog.h"
-#include "ofx/HTTP/AbstractTypes.h"
-#include "ofx/HTTP/Server/BaseRouteHandler.h"
-#include "ofx/HTTP/Server/BaseRouteSettings.h"
+#include "ofx/HTTP/Server/BaseServer.h"
+#include "ofx/HTTP/Server/FileSystem/FileSystemRoute.h"
+#include "ofx/HTTP/Server/FileSystem/FileSystemRouteSettings.h"
 
 
 namespace ofx {
 namespace HTTP {
 
 
-class BaseRoute: public AbstractRoute
+class BasicServerSettings:
+    public FileSystemRouteSettings,
+    public BaseServerSettings
+{
+};
+
+class BasicServer: public BaseServer_<BasicServerSettings>
 {
 public:
-    BaseRoute();
+    typedef std::shared_ptr<BasicServer> SharedPtr;
+    typedef BasicServerSettings Settings;
 
-    virtual ~BaseRoute();
+    BasicServer(const Settings& settings = Settings());
+    virtual ~BasicServer();
 
-    virtual std::string getRoutePathPattern() const;
-
-    virtual bool canHandleRequest(const Poco::Net::HTTPServerRequest& request,
-                                  bool isSecurePort) const;
-
-    virtual Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request);
-
-    virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
-                               Poco::Net::HTTPServerResponse& response);
-
-    virtual void stop();
+    // this method is a hack replacement for std::make_shared<BasicServer>(...);
+    static SharedPtr makeShared(const Settings& settings = Settings())
+    {
+        return SharedPtr(new BasicServer(settings));
+    }
 
 private:
-    BaseRoute(const BaseRoute&);
-	BaseRoute& operator = (const BaseRoute&);
+    FileSystemRoute::SharedPtr _fileSystemRoute;
 
 };
 

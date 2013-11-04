@@ -26,45 +26,47 @@
 #pragma once
 
 
-#include <string>
-#include "Poco/Net/HTTPServerRequest.h"
-#include "Poco/Net/HTTPRequestHandler.h"
-#include "Poco/RegularExpression.h"
-#include "Poco/URI.h"
-#include "ofLog.h"
-#include "ofx/HTTP/AbstractTypes.h"
-#include "ofx/HTTP/Server/BaseRouteHandler.h"
-#include "ofx/HTTP/Server/BaseRouteSettings.h"
+#include "Credentials.h"
 
 
 namespace ofx {
 namespace HTTP {
 
 
-class BaseRoute: public AbstractRoute
+class ProxySettings: public Credentials
 {
 public:
-    BaseRoute();
+    ProxySettings();
 
-    virtual ~BaseRoute();
+    ProxySettings(const std::string& host,
+                  uint16_t port);
 
-    virtual std::string getRoutePathPattern() const;
+    ProxySettings(const std::string& username,
+                  const std::string& password,
+                  const std::string& host,
+                  uint16_t port);
 
-    virtual bool canHandleRequest(const Poco::Net::HTTPServerRequest& request,
-                                  bool isSecurePort) const;
+    virtual ~ProxySettings();
+    
+    virtual void clear();
+    
+    std::string getHost() const;
+    void setHost(const std::string& host);
 
-    virtual Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request);
+    uint16_t getPort() const;
+    void setPort(uint16_t port);
 
-    virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
-                               Poco::Net::HTTPServerResponse& response);
 
-    virtual void stop();
+    static const std::string    DEFAULT_PROXY_HOST;
+    static const uint16_t       DEFAULT_PROXY_PORT;
 
-private:
-    BaseRoute(const BaseRoute&);
-	BaseRoute& operator = (const BaseRoute&);
+    
+protected:
+    std::string _host;
+    uint16_t _port;
 
 };
 
 
 } } // namespace ofx::HTTP
+

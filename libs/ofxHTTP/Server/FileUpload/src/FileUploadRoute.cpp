@@ -23,48 +23,41 @@
 // =============================================================================
 
 
-#pragma once
-
-
-#include <string>
-#include "Poco/Net/HTTPServerRequest.h"
-#include "Poco/Net/HTTPRequestHandler.h"
-#include "Poco/RegularExpression.h"
-#include "Poco/URI.h"
-#include "ofLog.h"
-#include "ofx/HTTP/AbstractTypes.h"
-#include "ofx/HTTP/Server/BaseRouteHandler.h"
-#include "ofx/HTTP/Server/BaseRouteSettings.h"
+#include "ofx/HTTP/Server/FileUpload/FileUploadRoute.h"
 
 
 namespace ofx {
 namespace HTTP {
 
-
-class BaseRoute: public AbstractRoute
+    
+FileUploadRoute::FileUploadRoute(const Settings& settings):
+    _settings(settings)
 {
-public:
-    BaseRoute();
+}
 
-    virtual ~BaseRoute();
+FileUploadRoute::~FileUploadRoute()
+{
+}
 
-    virtual std::string getRoutePathPattern() const;
+std::string FileUploadRoute::getRoutePathPattern() const
+{
+    return _settings.getRoutePathPattern();
+}
 
-    virtual bool canHandleRequest(const Poco::Net::HTTPServerRequest& request,
-                                  bool isSecurePort) const;
+Poco::Net::HTTPRequestHandler* FileUploadRoute::createRequestHandler(const Poco::Net::HTTPServerRequest& request)
+{
+    return new FileUploadRouteHandler(*this);
+}
 
-    virtual Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request);
+FileUploadRouteEvents& FileUploadRoute::getEventsRef()
+{
+    return events;
+}
 
-    virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
-                               Poco::Net::HTTPServerResponse& response);
-
-    virtual void stop();
-
-private:
-    BaseRoute(const BaseRoute&);
-	BaseRoute& operator = (const BaseRoute&);
-
-};
+FileUploadRoute::Settings FileUploadRoute::getSettings() const
+{
+    return _settings;
+}
 
 
 } } // namespace ofx::HTTP

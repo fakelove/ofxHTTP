@@ -26,45 +26,44 @@
 #pragma once
 
 
-#include <string>
-#include "Poco/Net/HTTPServerRequest.h"
-#include "Poco/Net/HTTPRequestHandler.h"
-#include "Poco/RegularExpression.h"
-#include "Poco/URI.h"
-#include "ofLog.h"
-#include "ofx/HTTP/AbstractTypes.h"
-#include "ofx/HTTP/Server/BaseRouteHandler.h"
-#include "ofx/HTTP/Server/BaseRouteSettings.h"
+#include "ofx/HTTP/Server/FileSystem/FileSystemRouteHandler.h"
+#include "ofx/HTTP/Server/FileSystem/FileSystemRouteInterface.h"
+#include "ofx/HTTP/Server/FileSystem/FileSystemRouteSettings.h"
 
 
 namespace ofx {
 namespace HTTP {
 
 
-class BaseRoute: public AbstractRoute
+class FileSystemRoute: public FileSystemRouteInterface
 {
 public:
-    BaseRoute();
+    typedef std::shared_ptr<FileSystemRoute> SharedPtr;
+    typedef std::weak_ptr<FileSystemRoute>   WeakPtr;
+    typedef FileSystemRouteSettings Settings;
 
-    virtual ~BaseRoute();
-
-    virtual std::string getRoutePathPattern() const;
-
-    virtual bool canHandleRequest(const Poco::Net::HTTPServerRequest& request,
-                                  bool isSecurePort) const;
-
-    virtual Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request);
+    FileSystemRoute(const Settings& settings);
+    virtual ~FileSystemRoute();
 
     virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
                                Poco::Net::HTTPServerResponse& response);
 
-    virtual void stop();
+    virtual bool canHandleRequest(const Poco::Net::HTTPServerRequest& request,
+                                  bool isSecurePort) const;
+
+    Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request);
+
+    FileSystemRouteSettings getSettings() const;
+
+    static SharedPtr makeShared(const Settings& settings)
+    {
+        return SharedPtr(new FileSystemRoute(settings));
+    }
 
 private:
-    BaseRoute(const BaseRoute&);
-	BaseRoute& operator = (const BaseRoute&);
+    Settings _settings;
 
 };
 
-
+    
 } } // namespace ofx::HTTP

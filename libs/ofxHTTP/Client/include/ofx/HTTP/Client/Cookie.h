@@ -26,45 +26,48 @@
 #pragma once
 
 
-#include <string>
-#include "Poco/Net/HTTPServerRequest.h"
-#include "Poco/Net/HTTPRequestHandler.h"
-#include "Poco/RegularExpression.h"
 #include "Poco/URI.h"
-#include "ofLog.h"
-#include "ofx/HTTP/AbstractTypes.h"
-#include "ofx/HTTP/Server/BaseRouteHandler.h"
-#include "ofx/HTTP/Server/BaseRouteSettings.h"
+#include "Poco/String.h"
+#include "Poco/Net/HTTPCookie.h"
+#include "ofUtils.h"
 
 
 namespace ofx {
 namespace HTTP {
 
 
-class BaseRoute: public AbstractRoute
+class Cookie
 {
 public:
-    BaseRoute();
+    Cookie(const Poco::Net::HTTPCookie& cookie);
+    Cookie(const Poco::Net::HTTPCookie& cookie, unsigned long long createdAt);
 
-    virtual ~BaseRoute();
+    ~Cookie();
 
-    virtual std::string getRoutePathPattern() const;
+    unsigned long long getCreatedAt() const;
+    bool isExpired(unsigned long long expiredAt = ofGetSystemTime()) const;
+    bool isSession() const;
+    
+    bool matchesDomain(const Poco::URI& uri) const;
+    bool matchesPath(const Poco::URI& uri) const;
+    bool matchesURI(const Poco::URI& uri, bool matchSessionCookies = true) const;
+    // matches uri
+    // makes sure the cookie, makes sure 
+    
+    bool matches(const Cookie& cookie) const;
+    
+    std::string toString() const;
+    
+protected:
+    Poco::Net::HTTPCookie _cookie;
+    unsigned long long _createdAt;
+    
+    const Poco::Net::HTTPCookie& getCookie() const;
 
-    virtual bool canHandleRequest(const Poco::Net::HTTPServerRequest& request,
-                                  bool isSecurePort) const;
+    bool static endsWith(const std::string& fullString, const std::string& ending);
 
-    virtual Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request);
-
-    virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
-                               Poco::Net::HTTPServerResponse& response);
-
-    virtual void stop();
-
-private:
-    BaseRoute(const BaseRoute&);
-	BaseRoute& operator = (const BaseRoute&);
-
+    friend class CookieStore;
 };
 
 
-} } // namespace ofx::HTTP
+} }

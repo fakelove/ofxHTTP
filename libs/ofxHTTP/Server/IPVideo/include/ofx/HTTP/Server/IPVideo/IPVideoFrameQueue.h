@@ -1,6 +1,6 @@
 // =============================================================================
 //
-// Copyright (c) 2013 Christopher Baker <http://christopherbaker.net>
+// Copyright (c) 2012-2013 Christopher Baker <http://christopherbaker.net>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,48 +22,45 @@
 //
 // =============================================================================
 
-
 #pragma once
 
+#include <queue>
 
-#include <string>
-#include "Poco/Net/HTTPServerRequest.h"
-#include "Poco/Net/HTTPRequestHandler.h"
-#include "Poco/RegularExpression.h"
-#include "Poco/URI.h"
-#include "ofLog.h"
-#include "ofx/HTTP/AbstractTypes.h"
-#include "ofx/HTTP/Server/BaseRouteHandler.h"
-#include "ofx/HTTP/Server/BaseRouteSettings.h"
+//#include "Poco/Condition.h"
+
+//#include "ofTypes.h"
+
+#include "ofx/HTTP/Server/IPVideo/IPVideoFrame.h"
+#include "ofx/HTTP/Server/IPVideo/IPVideoFrameSettings.h"
 
 
 namespace ofx {
 namespace HTTP {
 
 
-class BaseRoute: public AbstractRoute
+class IPVideoFrameQueue
 {
 public:
-    BaseRoute();
+    IPVideoFrameQueue(std::size_t maxSize);
+    virtual ~IPVideoFrameQueue();
 
-    virtual ~BaseRoute();
+    IPVideoFrame::SharedPtr pop();
+    
+    void push(IPVideoFrame::SharedPtr frame);
 
-    virtual std::string getRoutePathPattern() const;
-
-    virtual bool canHandleRequest(const Poco::Net::HTTPServerRequest& request,
-                                  bool isSecurePort) const;
-
-    virtual Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request);
-
-    virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
-                               Poco::Net::HTTPServerResponse& response);
-
-    virtual void stop();
+    std::size_t getMaxSize() const;
+    void setMaxSize(std::size_t maxSize);
+    std::size_t size() const;
+    bool empty() const;
 
 private:
-    BaseRoute(const BaseRoute&);
-	BaseRoute& operator = (const BaseRoute&);
+    typedef std::deque<IPVideoFrame::SharedPtr> ClientFrameQueue;
 
+    ClientFrameQueue _frames;
+    std::size_t _maxSize;
+
+    mutable ofMutex _mutex;
+    
 };
 
 
