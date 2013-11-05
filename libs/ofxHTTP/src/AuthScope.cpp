@@ -41,7 +41,7 @@ AuthScope::AuthScope():
     _hasRealm(false),
     _realm(""),
     _hasAuthType(false),
-    _authType(Authentication::NONE)
+    _authType(NONE)
 {
 }
 
@@ -56,7 +56,7 @@ AuthScope::AuthScope(const std::string& host):
     _hasRealm(false),
     _realm(""),
     _hasAuthType(false),
-    _authType(Authentication::NONE)
+    _authType(NONE)
 {
 }
     
@@ -71,12 +71,12 @@ AuthScope::AuthScope(const std::string& host, uint16_t port):
     _hasRealm(false),
     _realm(""),
     _hasAuthType(false),
-    _authType(Authentication::NONE)
+    _authType(NONE)
 {
 }
 
     //------------------------------------------------------------------------------
-AuthScope::AuthScope(const std::string& host, Authentication::Type authType):
+AuthScope::AuthScope(const std::string& host, AuthenticationType authType):
     _hasScheme(false),
     _scheme(""),
     _hasHost(true),
@@ -93,7 +93,7 @@ AuthScope::AuthScope(const std::string& host, Authentication::Type authType):
 //------------------------------------------------------------------------------
 AuthScope::AuthScope(const std::string& host,
                      uint16_t port,
-                     Authentication::Type authType):
+                     AuthenticationType authType):
     _hasScheme(false),
     _scheme(""),
     _hasHost(true),
@@ -112,7 +112,7 @@ AuthScope::AuthScope(const std::string& scheme,
                      const std::string& host,
                      uint16_t port,
                      const std::string& realm,
-                     Authentication::Type authType):
+                     AuthenticationType authType):
     _hasScheme(true),
     _scheme(scheme),
     _hasHost(true),
@@ -137,7 +137,7 @@ AuthScope::AuthScope(const Poco::URI& uri):
     _hasRealm(false),
     _realm(""),
     _hasAuthType(false),
-    _authType(Authentication::BASIC)
+    _authType(BASIC)
 {
     if(!uri.getScheme().empty()) setScheme(uri.getScheme());
     if(!uri.getHost().empty())   setHost(uri.getHost());
@@ -284,9 +284,9 @@ bool AuthScope::hasAuthType() const
 }
 
 //------------------------------------------------------------------------------
-void AuthScope::setAuthType(Authentication::Type authType)
+void AuthScope::setAuthType(AuthenticationType authType)
 {
-    if(Authentication::NONE == authType)
+    if(NONE == authType)
     {
         clearAuthType();
     }
@@ -300,12 +300,12 @@ void AuthScope::setAuthType(Authentication::Type authType)
 //------------------------------------------------------------------------------
 void AuthScope::clearAuthType()
 {
-    _authType = Authentication::NONE;
+    _authType = NONE;
     _hasAuthType = false;
 }
 
 //------------------------------------------------------------------------------
-Authentication::Type AuthScope::getAuthType() const
+AuthenticationType AuthScope::getAuthType() const
 {
     return _authType;
 }
@@ -417,13 +417,13 @@ std::string AuthScope::toString() const
     {
         switch(getAuthType())
         {
-            case Authentication::BASIC:
+            case BASIC:
                 ss << "BASIC";
                 break;
-            case Authentication::DIGEST:
+            case DIGEST:
                 ss << "DIGEST";
                 break;
-            case Authentication::NONE:
+            case NONE:
                 ss << "NONE";
                 break;
             default:

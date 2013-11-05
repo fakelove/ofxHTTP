@@ -257,16 +257,16 @@ bool CredentialStore::authenticate(const Poco::Net::HTTPClientSession& pSession,
     {
         for(Poco::Net::HTTPResponse::ConstIterator iter = pResponse.find("WWW-Authenticate"); iter != pResponse.end(); ++iter)
         {
-            Authentication::Type requestedAuthType;
+            AuthenticationType requestedAuthType;
             
             if(Poco::Net::HTTPCredentials::isBasicCredentials(iter->second))
             {
-                requestedAuthType = Authentication::BASIC;
+                requestedAuthType = BASIC;
                 cout << "AUTHENTICATING BASIC: " << iter->second << endl;
             }
             else if(Poco::Net::HTTPCredentials::isDigestCredentials(iter->second))
             {
-                requestedAuthType = Authentication::DIGEST;
+                requestedAuthType = DIGEST;
                 cout << "AUTHENTICATING DIGEST: " << iter->second << endl;
             }
             else
@@ -311,14 +311,14 @@ bool CredentialStore::authenticate(const Poco::Net::HTTPClientSession& pSession,
             {
                 cout << "HAD CREDS FOR TARGET SCOPE =" << targetScope.toString() << endl;
                 cout << "HAD CREDS FOR MATCHING SCOPE =" << matchingScope.toString() << endl;
-                if(requestedAuthType == Authentication::BASIC)
+                if(requestedAuthType == BASIC)
                 {
                     // replace any old ones (probably means they failed and were updated somewhere)
                     basicCredentialCacheMap[matchingScope] = HTTPBasicCredentialsSharedPtr(new Poco::Net::HTTPBasicCredentials(matchingCredentials.getUsername(),matchingCredentials.getPassword()));
                     basicCredentialCacheMap[matchingScope].get()->authenticate(pRequest);
                     return true;
                 }
-                else if(requestedAuthType == Authentication::DIGEST)
+                else if(requestedAuthType == DIGEST)
                 {
                     digestCredentialCacheMap[matchingScope] = HTTPDigestCredentialsSharedPtr(new Poco::Net::HTTPDigestCredentials(matchingCredentials.getUsername(),matchingCredentials.getPassword()));
                     digestCredentialCacheMap[matchingScope].get()->authenticate(pRequest,pResponse);

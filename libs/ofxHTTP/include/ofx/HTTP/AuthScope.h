@@ -44,15 +44,15 @@ public:
     AuthScope(const std::string& host);
     AuthScope(const std::string& host, uint16_t port);
     AuthScope(const std::string& host,
-              Authentication::Type authType);
+              AuthenticationType authType);
     AuthScope(const std::string& host,
               uint16_t port,
-              Authentication::Type authType);
+              AuthenticationType authType);
     AuthScope(const std::string& scheme,
               const std::string& host,
               uint16_t port,
               const std::string& realm,
-              Authentication::Type authType);
+              AuthenticationType authType);
     AuthScope(const Poco::URI& uri);
     
     bool hasScheme() const;
@@ -77,8 +77,8 @@ public:
 
     bool hasAuthType() const;
     void clearAuthType();
-    void setAuthType(Authentication::Type authType);
-    Authentication::Type getAuthType() const;
+    void setAuthType(AuthenticationType authType);
+    AuthenticationType getAuthType() const;
 
     int match(const AuthScope& scope) const;
     
@@ -102,7 +102,7 @@ private:
     std::string _realm;
     
     bool _hasAuthType;
-    Authentication::Type _authType;
+    AuthenticationType _authType;
 
 };
 

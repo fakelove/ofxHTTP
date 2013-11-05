@@ -29,25 +29,39 @@
 namespace ofx {
 namespace HTTP {
 
-    
-class Authentication
-{
-public:
-    enum //Type
+
+enum AuthenticationType
     {
         NONE,
         BASIC,
         DIGEST
     };
 
-    enum //Status
+    enum AuthenticationStatus
     {
         OK,
         UNAUTHORIZED,
         NO_CREDENTIALS
     };
-
-};
+    
+//class Authentication
+//{
+//public:
+//    enum //Type
+//    {
+//        NONE,
+//        BASIC,
+//        DIGEST
+//    };
+//
+//    enum //Status
+//    {
+//        OK,
+//        UNAUTHORIZED,
+//        NO_CREDENTIALS
+//    };
+//
+//};
 
 
 } } // namespace ofx::HTTP
