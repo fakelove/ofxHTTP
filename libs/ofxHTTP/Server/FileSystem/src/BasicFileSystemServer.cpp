@@ -23,7 +23,7 @@
 // =============================================================================
 
 
-#include "ofx/HTTP/Server/FileSYstem/BasicFileSystemServer.h"
+#include "ofx/HTTP/Server/FileSystem/BasicFileSystemServer.h"
 
 
 namespace ofx {
