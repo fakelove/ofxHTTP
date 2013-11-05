@@ -50,6 +50,7 @@ CredentialStore& CredentialStore::operator = (CredentialStore& that)
     Poco::FastMutex::ScopedLock thatLock(that.mutex);
     credentialMap = that.credentialMap;
     // cache is not copied
+    return *this;
 }
 
 //------------------------------------------------------------------------------

@@ -50,7 +50,7 @@ class BaseClient
 {
 public:
     BaseClient(ClientContext::SharedPtr context = ClientContext::defaultClientContext(),
-           Poco::ThreadPool& threadPoolRef = Poco::ThreadPool::defaultPool());
+               Poco::ThreadPool& threadPoolRef = Poco::ThreadPool::defaultPool());
 
     virtual ~BaseClient();
     
@@ -80,9 +80,10 @@ protected:
     Poco::Thread _syncThread; // thread for executing syncronous calls
                               // must always be immediately joined
     
+    ClientContext::SharedPtr _context;
+
     Poco::ThreadPool& _threadPoolRef; // thread pool for executing asynchronous calls
     
-    ClientContext::SharedPtr _context;
 
 //    ofThreadErrorHandler errorHandler;
 //    ErrorHandler* previousErrorHandler;

@@ -109,16 +109,17 @@ private:
 
     int _maxRedirects;
     
-    Poco::Net::NameValueCollection _defaultHeaders;
 
     Poco::Timespan _keepAliveTimeout;
 
     bool            _bUseProxy;
     ProxySettings   _proxy;
 
-    bool    _bUseCredentialStore;
-    bool    _bUseCookieStore;
-    
+    bool _useCookieStore;
+    bool _useCredentialStore;
+
+    Poco::Net::NameValueCollection _defaultHeaders;
+
 };
 
     

@@ -44,8 +44,8 @@ SessionSettings::SessionSettings() :
     _keepAliveTimeout(DEFAULT_KEEPALIVE_TIMEOUT),
     _bUseProxy(false),
     _proxy(ProxySettings()),
-    _bUseCookieStore(true),
-    _bUseCredentialStore(true)
+    _useCookieStore(true),
+    _useCredentialStore(true)
 {
 }
 
@@ -62,8 +62,8 @@ SessionSettings::SessionSettings(SessionSettings& that)
     _keepAliveTimeout    = that._keepAliveTimeout;
     _bUseProxy           = that._bUseProxy;
     _proxy               = that._proxy;
-    _bUseCredentialStore = that._bUseCredentialStore;
-    _bUseCookieStore     = that._bUseCookieStore;
+    _useCredentialStore  = that._useCredentialStore;
+    _useCookieStore      = that._useCookieStore;
     
 }
 
@@ -81,8 +81,8 @@ SessionSettings& SessionSettings::operator = (SessionSettings& that)
     _keepAliveTimeout    = that._keepAliveTimeout;
     _bUseProxy           = that._bUseProxy;
     _proxy               = that._proxy;
-    _bUseCredentialStore = that._bUseCredentialStore;
-    _bUseCookieStore     = that._bUseCookieStore;
+    _useCredentialStore  = that._useCredentialStore;
+    _useCookieStore      = that._useCookieStore;
     
 }
 
@@ -298,31 +298,31 @@ bool SessionSettings::hasProxyCredentials() const
 }
 
 //------------------------------------------------------------------------------
-void SessionSettings::setUseCredentialStore(bool bUseCredentialStore)
+void SessionSettings::setUseCredentialStore(bool useCredentialStore)
 {
     Poco::FastMutex::ScopedLock lock(_mutex);
-    _bUseCredentialStore = bUseCredentialStore;
+    _useCredentialStore = useCredentialStore;
 }
 
 //------------------------------------------------------------------------------
 bool SessionSettings::useCredentialStore() const
 {
     Poco::FastMutex::ScopedLock lock(_mutex);
-    return _bUseCredentialStore;
+    return _useCredentialStore;
 }
 
 //------------------------------------------------------------------------------
-void SessionSettings::setUseCookielStore(bool bUseCookieStore)
+void SessionSettings::setUseCookielStore(bool useCookieStore)
 {
     Poco::FastMutex::ScopedLock lock(_mutex);
-    _bUseCookieStore = bUseCookieStore;
+    _useCookieStore = useCookieStore;
 }
 
 //------------------------------------------------------------------------------
 bool SessionSettings::useCookieStore() const
 {
     Poco::FastMutex::ScopedLock lock(_mutex);
-    return _bUseCookieStore;
+    return _useCookieStore;
 }
 
 

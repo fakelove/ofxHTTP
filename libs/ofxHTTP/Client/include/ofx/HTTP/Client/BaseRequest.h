@@ -93,15 +93,17 @@ protected:
     virtual void prepareRequest(Poco::Net::HTTPRequest& request) const = 0;
     virtual void sendRequestBody(std::ostream& requestStream) const;
 
-    Poco::URI _uri;
-    
+
     std::string _httpMethod;
     std::string _httpVersion;
+
+    Poco::URI _uri;
 
     std::vector<Cookie> _cookies;
     
     Poco::Net::NameValueCollection _form;
     Poco::Net::NameValueCollection _headers;
+
 
     friend class BaseClient;
     
