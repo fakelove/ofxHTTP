@@ -80,8 +80,7 @@ public:
     int getFieldLimit() const;
     
 protected:
-    Poco::Exception* _exception;
-    
+
     Poco::Net::HTTPResponseStream* _httpResponseStream;
     std::streamsize _contentLength;
     
@@ -101,6 +100,8 @@ protected:
     
     Poco::Net::NameValueCollection _headers;
     int _fieldLimit;
+
+    Poco::Exception* _exception;
 
 };
 
