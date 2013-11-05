@@ -110,16 +110,16 @@ void BaseWebSocketSessionManager::broadcast(ofPixels& pixels)
     ofScopedLock lock(_mutex);
     WebSocketConnectionsIter iter = _connections.begin();
 
-    int numChannels = pixels.getNumChannels();
-    int width       = pixels.getWidth();
-    int height      = pixels.getHeight();
-
-    while(iter != _connections.end())
-    {
-        ofPixels pixels;
-        //sendFrame(*iter,frame);
-        ++iter;
-    }
+//    int numChannels = pixels.getNumChannels();
+//    int width       = pixels.getWidth();
+//    int height      = pixels.getHeight();
+//
+//    while(iter != _connections.end())
+//    {
+//        ofPixels pixels;
+//        //sendFrame(*iter,frame);
+//        ++iter;
+//    }
 }
 
 //------------------------------------------------------------------------------
