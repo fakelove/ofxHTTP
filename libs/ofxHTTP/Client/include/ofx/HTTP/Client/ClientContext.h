@@ -63,7 +63,7 @@ public:
     ClientContext(ClientContext& that);
 	ClientContext& operator = (ClientContext& that);
     
-    ~ClientContext();
+    virtual ~ClientContext();
    
     SessionSettings getSessionSettings();
     SessionSettings& getSessionSettingsRef();
