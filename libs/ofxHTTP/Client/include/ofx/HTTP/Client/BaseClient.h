@@ -49,7 +49,10 @@ namespace Client {
 class BaseClient
 {
 public:
-    BaseClient(ClientContext::SharedPtr context = ClientContext::defaultClientContext(),
+    typedef std::shared_ptr<BaseClient> SharedPtr;
+    typedef std::weak_ptr<BaseClient>   WeakPtr;
+
+    BaseClient(ClientContext::SharedPtr context,
                Poco::ThreadPool& threadPoolRef = Poco::ThreadPool::defaultPool());
 
     virtual ~BaseClient();
@@ -69,17 +72,19 @@ public:
     void setCredentials(const Poco::URI& uri,
                         const std::string& username,
                         const std::string& password);
-    
+
+
+
     
 protected:
     void update(ofEventArgs& args);
 
     static ResponseStream* openResponseStream(const BaseRequest& request,
-                                              ClientContext::SharedPtr context = ClientContext::defaultClientContext());
+                                              ClientContext::SharedPtr context);
         
-    Poco::Thread _syncThread; // thread for executing syncronous calls
-                              // must always be immediately joined
-    
+//    Poco::Thread _syncThread; // thread for executing syncronous calls
+//                              // must always be immediately joined
+
     ClientContext::SharedPtr _context;
 
     Poco::ThreadPool& _threadPoolRef; // thread pool for executing asynchronous calls

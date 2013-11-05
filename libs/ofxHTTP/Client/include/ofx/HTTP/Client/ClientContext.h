@@ -83,7 +83,12 @@ public:
 //    void setCredentials(const URI& uri, const ofxHTTPCredentials& credentials);
 //    void setCredentials(const URI& uri, const string& username, const string& password);
     
-    static ClientContext::SharedPtr defaultClientContext();
+//    static ClientContext::SharedPtr defaultClientContext();
+
+    static SharedPtr makeShared()
+    {
+        return SharedPtr(new ClientContext());
+    }
 
 private:
     ClientContext(const ClientContext& that);
