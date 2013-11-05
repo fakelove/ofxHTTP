@@ -44,8 +44,8 @@ FileUploadRouteSettings::FileUploadRouteSettings(const std::string& routePathPat
     _autoCreateUploadFolder(false),
     _uploadRedirect(DEFAULT_UPLOAD_REDIRECT),
     _writeBufferSize(DEFAULT_BUFFER_SIZE),
-    _requireValidContentType(false),
-    _autoRename(true)
+    _autoRename(true),
+    _requireValidContentType(false)
 {
 }
 
