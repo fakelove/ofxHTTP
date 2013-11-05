@@ -133,17 +133,17 @@ private:
     // TODO: replace w/ std::unique_ptr?
     HTTPServerPtr _server;
 
-    bool _isSecurePort;
-
     SettingsType _settings;
+
+    Poco::ThreadPool& _threadPoolRef;
+
+    bool _isSecurePort;
 
     Routes _routes;
 
     BaseRoute _baseRoute;
 
     Poco::Net::HTTPServerParams::Ptr getPocoHTTPServerParams(const HTTPServerParams& params);
-
-    Poco::ThreadPool& _threadPoolRef;
 
     MyErrorHandler eh;
     Poco::ErrorHandler* pOldEH;
