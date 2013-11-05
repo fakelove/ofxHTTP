@@ -107,8 +107,8 @@ bool BaseWebSocketSessionManager::sendBinary(AbstractWebSocketConnection* connec
 //------------------------------------------------------------------------------
 void BaseWebSocketSessionManager::broadcast(ofPixels& pixels)
 {
-    ofScopedLock lock(_mutex);
-    WebSocketConnectionsIter iter = _connections.begin();
+//    ofScopedLock lock(_mutex);
+//    WebSocketConnectionsIter iter = _connections.begin();
 
 //    int numChannels = pixels.getNumChannels();
 //    int width       = pixels.getWidth();
