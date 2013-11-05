@@ -45,7 +45,7 @@ public:
     SessionSettings(SessionSettings& that);
 	SessionSettings& operator = (SessionSettings& that);
 
-    ~SessionSettings();
+    virtual ~SessionSettings();
 
     void setVirtualHost(const std::string& virtualHost);
     std::string getVirtualHost() const;
