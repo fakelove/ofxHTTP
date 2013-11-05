@@ -32,15 +32,15 @@ namespace HTTP {
 
 //------------------------------------------------------------------------------
 Cookie::Cookie(const Poco::Net::HTTPCookie& cookie):
-    _cookie(cookie),
-    _createdAt(ofGetSystemTime())
+    Poco::Net::HTTPCookie(cookie),
+    _createdAt(Poco::Timestamp())
 {
 }
 
 //------------------------------------------------------------------------------
 Cookie::Cookie(const Poco::Net::HTTPCookie& cookie,
-               unsigned long long createdAt):
-    _cookie(cookie),
+               Poco::Timestamp createdAt):
+    Poco::Net::HTTPCookie(cookie),
     _createdAt(createdAt)
 {
 }
@@ -51,15 +51,15 @@ Cookie::~Cookie()
 }
 
 //------------------------------------------------------------------------------
-unsigned long long Cookie::getCreatedAt() const
+Poco::Timestamp Cookie::getCreatedAt() const
 {
     return _createdAt;
 }
 
 //------------------------------------------------------------------------------
-bool Cookie::isExpired(unsigned long long expiredAt) const
+bool Cookie::isExpired(Poco::Timestamp expiredAt) const
 {
-    int maxAge = _cookie.getMaxAge();
+    int maxAge = getMaxAge();
 
     return maxAge >= 0 && expiredAt > ( _createdAt + ( maxAge / 1000 ) );
 }
@@ -71,7 +71,7 @@ bool Cookie::isSession() const
     // if max age == -1, persistant, expiry not set, so a session cookie
     // if max age == 0, then it will be deleted immediately
     // if max age >  0, then it will expire sometime in the future
-    return _cookie.getMaxAge() < 0;
+    return getMaxAge() < 0;
 }
 
 //------------------------------------------------------------------------------
@@ -85,14 +85,14 @@ bool Cookie::matchesDomain(const Poco::URI& uri) const
         return false;
     }
     
-    if(_cookie.getDomain().empty())
+    if(getDomain().empty())
     {
         ofLogError("ofxCookieStore::matchCookieDomain") << "Cookie domain empty.";
         return false;
     }
     
-    std::string uriHost      = Poco::toLower(uri.getHost());
-    std::string cookieDomain = Poco::toLower(_cookie.getDomain());
+    std::string uriHost      = Poco::UTF8::toLower(uri.getHost());
+    std::string cookieDomain = Poco::UTF8::toLower(getDomain());
     
     // simple check
     if(!endsWith(uriHost,cookieDomain))
@@ -119,7 +119,7 @@ bool Cookie::matchesDomain(const Poco::URI& uri) const
 //------------------------------------------------------------------------------
 bool Cookie::matchesPath(const Poco::URI& uri) const
 {
-    return uri.getPath().find(_cookie.getPath()) == 0;
+    return uri.getPath().find(getPath()) == 0;
 }
 
 //------------------------------------------------------------------------------
@@ -129,7 +129,7 @@ bool Cookie::matchesURI(const Poco::URI& uri, bool matchSessionCookies) const
     // double check scheme
     if(uri.getScheme() != "http" && uri.getScheme() != "https") return false;
 
-    if(_cookie.getSecure() && uri.getScheme() != "https") return false;
+    if(getSecure() && uri.getScheme() != "https") return false;
 
     if(isExpired()) return false;
     
@@ -145,19 +145,19 @@ bool Cookie::matchesURI(const Poco::URI& uri, bool matchSessionCookies) const
 //------------------------------------------------------------------------------
 bool Cookie::matches(const Cookie& other) const
 {
-    bool isMatch = (_cookie.getName() == other.getCookie().getName());
+    bool isMatch = (getName() == other.getName());
         
     if(isMatch)
     {
         // do not differentiate empty and null domains
-        std::string thisDomain = _cookie.getDomain();
+        std::string thisDomain = getDomain();
         
         if(thisDomain.find( "." ) == std::string::npos)
         {
             thisDomain += ".local";
         }
         
-        std::string thatDomain = other._cookie.getDomain();
+        std::string thatDomain = other.getDomain();
         
         if(thatDomain.find( "." ) == std::string::npos)
         {
@@ -169,7 +169,7 @@ bool Cookie::matches(const Cookie& other) const
     
     if (isMatch)
     {
-        isMatch = (_cookie.getPath() == other._cookie.getPath());
+        isMatch = (getPath() == other.getPath());
     }
     
     return isMatch;
@@ -177,16 +177,10 @@ bool Cookie::matches(const Cookie& other) const
 
 
 //------------------------------------------------------------------------------
-const Poco::Net::HTTPCookie& Cookie::getCookie() const
-{
-    return _cookie;
-}
-
-//------------------------------------------------------------------------------
 std::string Cookie::toString() const
 {
     std::stringstream ss;
-    ss << _cookie.toString() << " Created @ " << _createdAt;
+    ss << Poco::Net::HTTPCookie::toString() << " Created @ " << _createdAt.elapsed();
     return ss.str();
 }
 

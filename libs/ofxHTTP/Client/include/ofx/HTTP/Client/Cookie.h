@@ -28,6 +28,7 @@
 
 #include "Poco/URI.h"
 #include "Poco/String.h"
+#include "Poco/UTF8String.h"
 #include "Poco/Net/HTTPCookie.h"
 #include "ofUtils.h"
 
@@ -36,16 +37,16 @@ namespace ofx {
 namespace HTTP {
 
 
-class Cookie
+class Cookie: public Poco::Net::HTTPCookie
 {
 public:
     Cookie(const Poco::Net::HTTPCookie& cookie);
-    Cookie(const Poco::Net::HTTPCookie& cookie, unsigned long long createdAt);
+    Cookie(const Poco::Net::HTTPCookie& cookie, Poco::Timestamp createdAt);
 
-    ~Cookie();
+    virtual ~Cookie();
 
-    unsigned long long getCreatedAt() const;
-    bool isExpired(unsigned long long expiredAt = ofGetSystemTime()) const;
+    Poco::Timestamp getCreatedAt() const;
+    bool isExpired(Poco::Timestamp expiredAt = Poco::Timestamp()) const;
     bool isSession() const;
     
     bool matchesDomain(const Poco::URI& uri) const;
@@ -59,11 +60,8 @@ public:
     std::string toString() const;
     
 protected:
-    Poco::Net::HTTPCookie _cookie;
-    unsigned long long _createdAt;
-    
-    const Poco::Net::HTTPCookie& getCookie() const;
-
+    Poco::Timestamp _createdAt;
+      
     bool static endsWith(const std::string& fullString, const std::string& ending);
 
     friend class CookieStore;

@@ -145,8 +145,9 @@ void CookieStore::addCookieWithExistingLock(const Cookie& cookie)
         }
     }
     
-    if(!cookie.isExpired()) {
-        cookies.push_back(cookie.getCookie());
+    if(!cookie.isExpired())
+    {
+        cookies.push_back(cookie);
     }
 }
 
@@ -157,7 +158,8 @@ bool CookieStore::clearExpired(unsigned long long expiredAt)
 
     bool didClear = false;
     CookiesIter iter = cookies.begin();
-    while(iter != cookies.end()) {
+    while(iter != cookies.end())
+    {
         Cookie cookie = (*iter);
         if(cookie.isExpired(expiredAt))
         {
@@ -182,8 +184,7 @@ bool CookieStore::clearCookiesWithName(const std::string& name)
     CookiesIter iter = cookies.begin();
     while(iter != cookies.end())
     {
-        Cookie cookie = (*iter);
-        if(cookie.getCookie().getName() == name)
+        if((*iter).getName() == name)
         {
             iter = cookies.erase(iter);
             didClear = true;
@@ -193,6 +194,7 @@ bool CookieStore::clearCookiesWithName(const std::string& name)
             ++iter;
         }
     }
+
     return didClear;
 }
 
@@ -205,8 +207,7 @@ bool CookieStore::clearCookiesWithDomain(const std::string& domain)
     CookiesIter iter = cookies.begin();
     while(iter != cookies.end())
     {
-        Cookie cookie = (*iter);
-        if(cookie.getCookie().getDomain() == domain)
+        if((*iter).getDomain() == domain)
         {
             iter = cookies.erase(iter);
             didClear = true;
@@ -229,8 +230,7 @@ bool CookieStore::clearCookiesWithPath(const std::string& path)
     CookiesIter iter = cookies.begin();
     while(iter != cookies.end())
     {
-        Cookie cookie = (*iter);
-        if(cookie.getCookie().getPath() == path)
+        if((*iter).getPath() == path)
         {
             iter = cookies.erase(iter);
             didClear = true;
