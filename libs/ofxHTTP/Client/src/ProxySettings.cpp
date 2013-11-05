@@ -23,7 +23,7 @@
 // =============================================================================
 
 
-#include "ProxySettings.h"
+#include "ofx/HTTP/Client/ProxySettings.h"
 
 
 namespace ofx {

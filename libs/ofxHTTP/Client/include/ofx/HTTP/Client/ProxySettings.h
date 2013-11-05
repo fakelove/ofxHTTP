@@ -26,7 +26,9 @@
 #pragma once
 
 
-#include "Credentials.h"
+#include <string>
+#include <stdint.h>
+#include "ofx/HTTP/Credentials.h"
 
 
 namespace ofx {
