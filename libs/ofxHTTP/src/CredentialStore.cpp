@@ -355,6 +355,7 @@ bool CredentialStore::authenticateWithCache(const AuthScope& scope,
                                             Poco::Net::HTTPRequest& pRequest)
 {
     // TODO:
+    return true;
 }
 
 //------------------------------------------------------------------------------
