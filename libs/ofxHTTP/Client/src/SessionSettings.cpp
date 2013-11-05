@@ -83,6 +83,8 @@ SessionSettings& SessionSettings::operator = (SessionSettings& that)
     _proxy               = that._proxy;
     _useCredentialStore  = that._useCredentialStore;
     _useCookieStore      = that._useCookieStore;
+
+    return *this;
     
 }
 
