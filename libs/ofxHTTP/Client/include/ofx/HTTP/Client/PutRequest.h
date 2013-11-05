@@ -31,22 +31,23 @@
 
 namespace ofx {
 namespace HTTP {
-namespace Request {
+namespace Client {
 
 
-class Put: public BaseRequest
+class PutRequest: public BaseRequest
 {
 public:
-    Put(const Poco::URI& uri);
-    Put(const Poco::URI& uri,
-        const std::string& httpVersion);
+    PutRequest(const Poco::URI& uri);
+    PutRequest(const Poco::URI& uri, const std::string& httpVersion);
     
-    virtual ~Put();
+    virtual ~PutRequest();
     
     void addFile(const std::string& filename);
     
+    void setContentRange(std::size_t startByte);
+
     void setContentRange(std::size_t startByte,
-                         std::size_t endByte = std::numeric_limits<std::size_t>::max());
+                         std::size_t endByte);
 
     void setContentType(const std::string& contentType);
     
@@ -60,9 +61,9 @@ protected:
     
     ofFile _file;
 
-    friend class Client;
+    friend class BaseClient;
 
 };
 
     
-} } } // ofx::HTTP::Request
+} } } // ofx::HTTP::Client

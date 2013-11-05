@@ -28,30 +28,53 @@
 
 namespace ofx {
 namespace HTTP {
-namespace Request {
+namespace Client {
 
 
 //------------------------------------------------------------------------------
-Put::Put(const Poco::URI& uri):
+PutRequest::PutRequest(const Poco::URI& uri):
     BaseRequest(Poco::Net::HTTPRequest::HTTP_PUT,uri)
 {
 }
 
 //------------------------------------------------------------------------------
-Put::Put(const Poco::URI& uri, const std::string& httpVersion):
+PutRequest::PutRequest(const Poco::URI& uri, const std::string& httpVersion):
     BaseRequest(Poco::Net::HTTPRequest::HTTP_PUT, uri, httpVersion)
 {
 }
 
 //------------------------------------------------------------------------------
-Put::~Put()
+PutRequest::~PutRequest()
 {
 }
+
+
+void PutRequest::addFile(const std::string& filename)
+{
+
+}
+
+void PutRequest::setContentRange(std::size_t startByte)
+{
+
+}
+
+void PutRequest::setContentRange(std::size_t startByte,
+                     std::size_t endByte)
+{
+
+}
+
+void PutRequest::setContentType(const std::string& contentType)
+{
+
+}
+
 
 //------------------------------------------------------------------------------
-void Put::prepareRequest(Poco::Net::HTTPRequest& request) const
+void PutRequest::prepareRequest(Poco::Net::HTTPRequest& request) const
 {
 }
 
 
-} } } // ofx::HTTP::Request
+} } } // ofx::HTTP::Client

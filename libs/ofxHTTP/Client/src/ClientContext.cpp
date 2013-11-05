@@ -105,12 +105,12 @@ CookieStore& ClientContext::getCookieStoreRef()
     return _cookieStore;
 }
 
-////------------------------------------------------------------------------------
-//ClientContext::SharedPtr ClientContext::defaultClientContext() {
-//    static ClientContext::SharedPtr DefaultClientContext = ClientContext::SharedPtr(new ClientContext());
-//
-//    return DefaultClientContext;
-//}
+//------------------------------------------------------------------------------
+ClientContext::SharedPtr ClientContext::defaultClientContext() {
+    static ClientContext::SharedPtr DefaultClientContext = ClientContext::SharedPtr(new ClientContext());
+
+    return DefaultClientContext;
+}
 
 //------------------------------------------------------------------------------
 CredentialStore ClientContext::getCredentialStore()

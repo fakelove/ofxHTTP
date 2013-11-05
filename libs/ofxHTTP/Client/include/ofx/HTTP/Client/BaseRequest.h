@@ -36,19 +36,16 @@
 #include "Poco/Net/HTTPResponse.h"
 #include "Poco/Net/NameValueCollection.h"
 #include "ofUtils.h"
-#include "Cookie.h"
+#include "ofx/HTTP/Client/Cookie.h"
 
 
 namespace ofx {
 namespace HTTP {
-
-    
-class Client;  // N.B. forward declaration needed for sub-namespace
-               // to befriend a class in a parent namespace
+namespace Client {
 
 
-namespace Request {
-
+class BaseClient;  // N.B. forward declaration needed for sub-namespace
+                   // to befriend a class in a parent namespace
 
 class BaseRequest
 {
@@ -106,9 +103,9 @@ protected:
     Poco::Net::NameValueCollection _form;
     Poco::Net::NameValueCollection _headers;
 
-    friend class Client;
+    friend class BaseClient;
     
 };
 
 
-} } } // namespace ofx::HTTP::Request
+} } } // namespace ofx::HTTP::Client

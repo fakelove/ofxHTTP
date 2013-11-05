@@ -26,21 +26,24 @@
 #pragma once
 
 
+#include <string>
+#include "Poco/URI.h"
+#include "Poco/Net/HTTPRequest.h"
 #include "ofx/HTTP/Client/BaseRequest.h"
 
 
 namespace ofx {
 namespace HTTP {
-namespace Request {
+namespace Client {
 
     
-class Get: public BaseRequest
+class GetRequest: public BaseRequest
 {
 public:
-    Get(const Poco::URI& uri);
-    Get(const Poco::URI& uri, const std::string& httpVersion);
+    GetRequest(const Poco::URI& uri);
+    GetRequest(const Poco::URI& uri, const std::string& httpVersion);
 
-    virtual ~Get();
+    virtual ~GetRequest();
     
     // TODO
     // http://pocoproject.org/forum/viewtopic.php?f=12&t=5036
@@ -49,9 +52,9 @@ public:
 protected:
     virtual void prepareRequest(Poco::Net::HTTPRequest& request) const;
 
-    friend class Client;
+    friend class BaseClient;
 
 };
 
     
-} } } // ofx::HTTP::Request
+} } } // ofx::HTTP::Client

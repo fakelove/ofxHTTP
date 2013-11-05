@@ -28,30 +28,30 @@
 
 namespace ofx {
 namespace HTTP {
-namespace Request {
+namespace Client {
 
 
 //------------------------------------------------------------------------------
-Get::Get(const Poco::URI& uri) :
+GetRequest::GetRequest(const Poco::URI& uri):
     BaseRequest(Poco::Net::HTTPRequest::HTTP_GET, uri)
 {
 }
 
 //------------------------------------------------------------------------------
-Get::Get(const Poco::URI& uri, const std::string& httpVersion):
+GetRequest::GetRequest(const Poco::URI& uri, const std::string& httpVersion):
     BaseRequest(Poco::Net::HTTPRequest::HTTP_GET,uri,httpVersion)
 {
 }
 
 //------------------------------------------------------------------------------
-Get::~Get()
+GetRequest::~GetRequest()
 {
 }
 
 //------------------------------------------------------------------------------
-void Get::prepareRequest(Poco::Net::HTTPRequest& request) const
+void GetRequest::prepareRequest(Poco::Net::HTTPRequest& request) const
 {
 }
 
 
-} } } // ofx::HTTP::Request
+} } } // ofx::HTTP::Client

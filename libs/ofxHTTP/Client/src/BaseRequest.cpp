@@ -28,7 +28,7 @@
 
 namespace ofx {
 namespace HTTP {
-namespace Request {
+namespace Client {
 
 
 //------------------------------------------------------------------------------
@@ -255,4 +255,4 @@ void BaseRequest::sendRequestBody(std::ostream& requestStream) const
 }
 
 
-} } } // ofx::HTTP::Request
+} } } // ofx::HTTP::Client

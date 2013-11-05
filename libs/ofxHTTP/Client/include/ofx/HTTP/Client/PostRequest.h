@@ -26,21 +26,25 @@
 #pragma once
 
 
-#include "BaseRequest.h"
+#include <string>
+#include <map>
+#include "Poco/URI.h"
+#include "Poco/Net/NameValueCollection.h"
+#include "ofx/HTTP/Client/BaseRequest.h"
 
 
 namespace ofx {
 namespace HTTP {
-namespace Request {
+namespace Client {
 
 
-class Post: public BaseRequest
+class PostRequest: public BaseRequest
 {
 public:
-    Post(const Poco::URI& uri);
-    Post(const Poco::URI& uri, const std::string& httpVersion);
+    PostRequest(const Poco::URI& uri);
+    PostRequest(const Poco::URI& uri, const std::string& httpVersion);
     
-    virtual ~Post();
+    virtual ~PostRequest();
     
     void addFormFile(const std::string& fieldName, const std::string& filePath);
     void addFormFiles(const Poco::Net::NameValueCollection& nameValueMap);
@@ -60,7 +64,7 @@ protected:
 
     Poco::Net::NameValueCollection _formFiles;
 
-    friend class Client;
+    friend class BaseClient;
 
 };
 
