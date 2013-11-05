@@ -29,6 +29,7 @@
 #include <map>
 #include <sstream>
 #include <string>
+#include <stdint.h>
 #include "Poco/URI.h"
 #include "Authentication.h"
 
