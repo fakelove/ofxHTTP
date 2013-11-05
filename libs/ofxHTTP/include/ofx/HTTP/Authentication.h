@@ -33,14 +33,14 @@ namespace HTTP {
 class Authentication
 {
 public:
-    enum Type
+    enum //Type
     {
         NONE,
         BASIC,
         DIGEST
     };
 
-    enum Status
+    enum //Status
     {
         OK,
         UNAUTHORIZED,
