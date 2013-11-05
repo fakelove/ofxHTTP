@@ -110,6 +110,8 @@ class HTTPServerParams: public TCPServerParams
 {
 public:
     HTTPServerParams():
+        _serverName(""),
+        _softwareVersion(""),
         _timeout(60000000),
         _keepAlive(true),
         _maxKeepAliveRequests(0),
