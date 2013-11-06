@@ -39,21 +39,22 @@
 #include "Poco/Net/HTTPCookie.h"
 #include "Poco/Net/HTTPResponse.h"
 #include "Poco/Net/HTTPIOStream.h"
-#include "BaseRequest.h"
+#include "ofTypes.h"
 
 
 namespace ofx {
 namespace HTTP {
 
 
-class ResponseStream: public Poco::RefCountedObject
+class ResponseStream
 {
 public:
-//    typedef Poco::AutoPtr<ResponseStream> Ptr;
+    typedef std::shared_ptr<ResponseStream> SharedPtr;
+    typedef std::weak_ptr<ResponseStream>   WeakPtr;
 
-    ResponseStream(Poco::Net::HTTPResponse& pResponse,
-                   Poco::Net::HTTPResponseStream* responseStream,
-                   Poco::Exception* exception = NULL);
+    ResponseStream(Poco::Net::HTTPResponse& responseRef,
+                   Poco::Net::HTTPResponseStream& responseStreamRef,
+                   Poco::Exception* exception = 0);
 
     virtual ~ResponseStream();
 
@@ -70,18 +71,31 @@ public:
     std::string getTransferEncoding() const;
     bool getChunkedTransferEncoding() const;
     
-    bool hasResponseStream() const;
-    std::istream* getResponseStream() const;
-    
+//    bool hasResponseStream() const;
+//    std::istream& getResponseStream() const;
+
     bool hasException() const;
     Poco::Exception* getException() const;
     
     Poco::Net::NameValueCollection getHeaders() const;
     int getFieldLimit() const;
-    
+
+    static SharedPtr makeShared(Poco::Net::HTTPResponse& responseRef,
+                                Poco::Net::HTTPResponseStream& responseStreamRef,
+                                Poco::Exception* exception = 0)
+    {
+        return SharedPtr(new ResponseStream(responseRef, responseStreamRef, exception));
+    }
+
 protected:
 
-    Poco::Net::HTTPResponseStream* _httpResponseStream;
+//    Poco::Net::HTTPResponseStream& _httpResponseStream;
+
+    std::istream& _istr;
+//    std::istream& _istr;
+
+
+
     std::streamsize _contentLength;
     
     std::string _version;

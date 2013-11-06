@@ -38,8 +38,8 @@ BaseClient::BaseClient(ClientContext::SharedPtr context,
     _threadPoolRef(threadPoolRef)
 {
     ofAddListener(ofEvents().update,this,&BaseClient::update);
-    
-    cout << "MAXR=" << _context.get()->getSessionSettingsRef().getMaxRedirects() << endl;
+
+    cout << "MAXR=" << _context->getSessionSettingsRef().getMaxRedirects() << endl;
 }
 
 //------------------------------------------------------------------------------
@@ -72,11 +72,11 @@ void BaseClient::update(ofEventArgs& args)
 //    }
 }
         
-////------------------------------------------------------------------------------
-//ResponseStream* BaseClient::exectute(const Request::BaseRequest& request)
-//{
-//    return openResponseStream(request,context);
-//}
+//------------------------------------------------------------------------------
+ResponseStream::SharedPtr BaseClient::execute(const BaseRequest& request)
+{
+    return openResponseStream(request,_context);
+}
 
 ////------------------------------------------------------------------------------
 //void BaseClient::exectute(const Request::BaseRequest& _request,
@@ -135,195 +135,244 @@ void BaseClient::setCredentials(const Poco::URI& uri,
 //}
 
 //------------------------------------------------------------------------------
-ResponseStream* BaseClient::openResponseStream(const BaseRequest& request,
-                                               ClientContext::SharedPtr context)
+ResponseStream::SharedPtr BaseClient::openResponseStream(const BaseRequest& request,
+                                                         ClientContext::SharedPtr context)
 {
+    HTTPResponse httpResponse;
 
-    Poco::URI uri(request.getURI());
-
-    SessionSettings& sessionSettings = context.get()->getSessionSettingsRef();  // get a copy of the session settings
-    CredentialStore& credentials     = context.get()->getCredentialStoreRef();
-    CookieStore&     cookies         = context.get()->getCookieStoreRef();
+    SessionSettings& sessionSettings = context->getSessionSettingsRef();  // get a copy of the session settings
+    CredentialStore& credentials     = context->getCredentialStoreRef();
+    CookieStore&     cookies         = context->getCookieStoreRef();
 
     int redirects = 0;
 
-    Poco::Net::HTTPResponse pResponse;
+    try
+    {
+        Poco::URI uri(request.getURI());
 
-    // ofLogVerbose("Client::open") << "Beginning redirect loop. Max redirects = " << requestSettings.maxRedirects ;
+        ofLogVerbose("BaseClient::openResponseStream") << "Beginning redirect loop. Max redirects = " <<
+            context->getSessionSettingsRef().getMaxRedirects() ;
 
-    try {
-
-        while (redirects < sessionSettings.getMaxRedirects()) {
-            //            URI resolvedURI(targetURI);
-
+        while (redirects < sessionSettings.getMaxRedirects())
+        {
+            // URI resolvedURI(targetURI);
             Poco::URI redirectedProxyUri;
-            Poco::Net::HTTPClientSession* pSession = NULL;
+            HTTPClientSession* pClientSession; //
             bool proxyRedirectRequested = false;
-
             bool authenticationRequested = false;
-            //            bool authenticationAttempted = false;
+            // bool authenticationAttempted = false;
 
+            ofLogVerbose("BaseClient::openResponseStream") << "Beginning retry loop : redirect # " << redirects;
 
-            ofLogVerbose("Client::open") << "Beginning retry loop : redirect # " << redirects;
+            do
+            {
+                // pClientSession will be deleted if proxy is redirected
+                if (0 != pClientSession)
+                {
+                    pClientSession = new HTTPClientSession(uri.getHost(), uri.getPort());
 
-            do {
+                    ofLogVerbose("BaseClient::openResponseStream") << "New session created - host: " <<
+                        pClientSession->getHost() << " port: " << pClientSession->getPort();
 
-                // psession will be deleted if proxy is redirected
-                if (!pSession) {
+                    if(sessionSettings.isProxyEnabled())
+                    {
+                        if(redirectedProxyUri.empty())
+                        {
+                            ofLogVerbose("BaseClient::openResponseStream") << "Using proxy " <<
+                                sessionSettings.getProxyHost() << " @ " << sessionSettings.getProxyPort();
 
-                    pSession = new Poco::Net::HTTPClientSession(uri.getHost(), uri.getPort());
-
-                    ofLogVerbose("Client::open") << "New session created - host: " << pSession->getHost() << " port: " << pSession->getPort();
-
-                    if(sessionSettings.isProxyEnabled()) {
-                        if(redirectedProxyUri.empty()) {
-                            ofLogVerbose("Client::open") << "Using proxy " << sessionSettings.getProxyHost() << " @ " << sessionSettings.getProxyPort();
-
-                            pSession->setProxyHost(sessionSettings.getProxyHost());
-                            pSession->setProxyPort(sessionSettings.getProxyPort());
-                        } else {
-                            ofLogVerbose("Client::open") << "Using redirected proxy " << redirectedProxyUri.getHost() << " @ " << redirectedProxyUri.getPort();
+                            pClientSession->setProxyHost(sessionSettings.getProxyHost());
+                            pClientSession->setProxyPort(sessionSettings.getProxyPort());
+                        }
+                        else
+                        {
+                            ofLogVerbose("BaseClient::openResponseStream") << "Using redirected proxy " <<
+                                redirectedProxyUri.getHost() << " @ " << redirectedProxyUri.getPort();
 
                             // use the redirected proxy url, rather than the one provided in settings
-                            pSession->setProxyHost(redirectedProxyUri.getHost());
-                            pSession->setProxyPort(redirectedProxyUri.getPort());
+                            pClientSession->setProxyHost(redirectedProxyUri.getHost());
+                            pClientSession->setProxyPort(redirectedProxyUri.getPort());
                         }
 
-                        if(sessionSettings.hasProxyCredentials()) {
-                            ofLogVerbose("Client::open") << "With proxy username:password : " << sessionSettings.getProxyUsername() << ":" << sessionSettings.getProxyPassword();
-                            pSession->setProxyUsername(sessionSettings.getProxyUsername());
-                            pSession->setProxyPassword(sessionSettings.getProxyPassword());
-                        } else {
-                            ofLogVerbose("Client::open") << "Without proxy credentials.";
+                        if(sessionSettings.hasProxyCredentials())
+                        {
+                            ofLogVerbose("BaseClient::openResponseStream") << "With proxy username:password : " <<
+                                sessionSettings.getProxyUsername() << ":" << sessionSettings.getProxyPassword();
+
+                            pClientSession->setProxyUsername(sessionSettings.getProxyUsername());
+                            pClientSession->setProxyPassword(sessionSettings.getProxyPassword());
+                        }
+                        else
+                        {
+                            ofLogVerbose("BaseClient::openResponseStream") << "Without proxy credentials.";
                         }
                     }
-
-                } else {
-                    ofLogVerbose("Client::open") << "Using existing session - host: " << pSession->getHost() << " port: " << pSession->getPort();
+                }
+                else
+                {
+                    ofLogVerbose("BaseClient::openResponseStream") << "Using existing session - host: " <<
+                        pClientSession->getHost() << " port: " << pClientSession->getPort();
                 }
 
                 std::string path = uri.getPathAndQuery();
 
-                if(path.empty()) path = "/";
+                if(path.empty())
+                {
+                    path = "/";
+                }
 
-                ofLogVerbose("Client::open") << "Using path: " << path;
+                ofLogVerbose("BaseClient::openResponseStream") << "Using path: " << path;
 
-                Poco::Net::HTTPRequest pRequest(request.getMethod(), path, request.getVersion());
+                Poco::Net::HTTPRequest httpRequest(request.getMethod(),
+                                                   path,
+                                                   request.getVersion());
 
                 // apply defaults from the session first
-                if(sessionSettings.hasDefaultHeaders()) {
-                    ofLogVerbose("Client::open") << "Writing default headers:";
+                // TODO: default headers could also include useragent, etc ...
+                if(sessionSettings.hasDefaultHeaders())
+                {
+                    ofLogVerbose("BaseClient::openResponseStream") << "Writing default headers:";
                     Poco::Net::NameValueCollection defaultHeaders = sessionSettings.getDefaultHeaders();
                     Poco::Net::NameValueCollection::ConstIterator iter = defaultHeaders.begin();
-                    while(iter != defaultHeaders.end()) {
-                        ofLogVerbose("Client::open") << (*iter).first << "=" << (*iter).second;
-                        pRequest.set((*iter).first, (*iter).second);
+
+                    while(iter != defaultHeaders.end())
+                    {
+                        ofLogVerbose("BaseClient::openResponseStream") << (*iter).first << "=" << (*iter).second;
+                        httpRequest.set((*iter).first, (*iter).second);
+                        ++iter;
                     }
                 }
 
-
-                if(!sessionSettings.getUserAgent().empty()) {
-                    ofLogVerbose("Client::open") << "Setting user agent to: " << sessionSettings.getUserAgent();
-                    pRequest.set("User-Agent", sessionSettings.getUserAgent());
+                // TODO: this getting and setting user agent should be intelligently placed in the default headers
+                if(!sessionSettings.getUserAgent().empty())
+                {
+                    ofLogVerbose("BaseClient::openResponseStream") << "Setting user agent to: " << sessionSettings.getUserAgent();
+                    httpRequest.set("User-Agent", sessionSettings.getUserAgent());
                 }
 
                 ////// ALL OF THIS NEEDS TO GO ELSEWHERE -- maybe inside the context?
-                if(authenticationRequested) {
-                    credentials.authenticate(*pSession, pRequest, pResponse);
-                } else {
-                    credentials.authenticate(*pSession, pRequest);//
+                if(authenticationRequested)
+                {
+                    credentials.authenticate(*pClientSession, httpRequest, httpResponse);
+                }
+                else
+                {
+                    credentials.authenticate(*pClientSession, httpRequest);
                 }
 
 
                 // call back into the request to pull the request data
-                ofLogVerbose("Client::open") << "Preparing request.";
-                request.prepareRequest(pRequest);
+                ofLogVerbose("BaseClient::openResponseStream") << "Preparing request.";
+
+                request.prepareRequest(httpRequest);
 
 
                 //////////////////////////////////////////////////////////////////
                 /////////////////////// -- SEND REQUEST -- ///////////////////////
                 //////////////////////////////////////////////////////////////////
-                ofLogVerbose("Client::open") << "Sending request.";
-                std::ostream& requestStream = pSession->sendRequest(pRequest);
+                ofLogVerbose("BaseClient::openResponseStream") << "Sending request.";
+                std::ostream& requestStream = pClientSession->sendRequest(httpRequest);
 
-                ofLogVerbose("Client::open") << "Sending request body.";
+                ofLogVerbose("BaseClient::openResponseStream") << "Sending request body.";
                 request.sendRequestBody(requestStream); // upload, put etc
                 //////////////////////////////////////////////////////////////////
                 ///////////////////////// -- RESPONSE -- /////////////////////////
                 //////////////////////////////////////////////////////////////////
-                ofLogVerbose("Client::open") << "Receiving response.";
-                std::istream& responseStream = pSession->receiveResponse(pResponse);
+                ofLogVerbose("BaseClient::openResponseStream") << "Receiving response.";
+                std::istream& responseStream = pClientSession->receiveResponse(pResponse);
 
 
                 cookies.store(pResponse);
 
 
-                if (pResponse.getStatus() == Poco::Net::HTTPResponse::HTTP_MOVED_PERMANENTLY ||
-                    pResponse.getStatus() == Poco::Net::HTTPResponse::HTTP_FOUND ||
-                    pResponse.getStatus() == Poco::Net::HTTPResponse::HTTP_SEE_OTHER ||
-                    pResponse.getStatus() == Poco::Net::HTTPResponse::HTTP_TEMPORARY_REDIRECT) {
-
+                if (pResponse.getStatus() == HTTPResponse::HTTP_MOVED_PERMANENTLY   ||
+                    pResponse.getStatus() == HTTPResponse::HTTP_FOUND               ||
+                    pResponse.getStatus() == HTTPResponse::HTTP_SEE_OTHER           ||
+                    pResponse.getStatus() == HTTPResponse::HTTP_TEMPORARY_REDIRECT)
+                {
                     uri.resolve(pResponse.get("Location"));
 
                     ++redirects;
-                    delete pSession;
-                    pSession = NULL;
 
-                    ofLogVerbose("Client::open") << "Redirecting to: " << uri.toString();
+                    delete pClientSession;
+                    pClientSession = 0;
 
-                } else if (pResponse.getStatus() == Poco::Net::HTTPResponse::HTTP_OK) {
-                    ofLogVerbose("Client::open") << "Got valid stream, returning.";
+                    ofLogVerbose("BaseClient::openResponseStream") << "Redirecting to: " << uri.toString();
 
-                    return new ResponseStream(pResponse, new Poco::Net::HTTPResponseStream(responseStream, pSession));
-
-                } else if (pResponse.getStatus() == Poco::Net::HTTPResponse::HTTP_UNAUTHORIZED &&
-                           !authenticationRequested) {
-
+                }
+                else if (pResponse.getStatus() == HTTPResponse::HTTP_OK)
+                {
+                    ofLogVerbose("BaseClient::openResponseStream") << "Got valid stream, returning.";
+                    return ResponseStream::makeShared(pResponse, responseStream, pClientSession);
+                }
+                else if (pResponse.getStatus() == HTTPResponse::HTTP_UNAUTHORIZED &&
+                         !authenticationRequested)
+                {
                     authenticationRequested = true;
 
                     std::streamsize n = StreamUtils::consume(responseStream);
 
-                    ofLogVerbose("Client::open") << "Got HTTP_UNAUTHORIZED, trying to authorize with response this time. (" << n << " bytes consumed)";
+                    ofLogVerbose("BaseClient::openResponseStream") <<
+                        "Got HTTP_UNAUTHORIZED, trying to authorize with response this time. (" << n << " bytes consumed)";
 
-                } else if (pResponse.getStatus() == Poco::Net::HTTPResponse::HTTP_USEPROXY &&
-                           !proxyRedirectRequested) {
+                }
+                else if (pResponse.getStatus() == HTTPResponse::HTTP_USEPROXY &&
+                         !proxyRedirectRequested)
+                {
                     // The requested resource MUST be accessed through the proxy
                     // given by the Location field. The Location field gives the
                     // URI of the proxy. The recipient is expected to repeat this
                     // single request via the proxy. 305 responses MUST only be generated by origin servers.
                     // only use for one single request!
                     redirectedProxyUri.resolve(pResponse.get("Location"));
-                    delete pSession;
-                    pSession = NULL;
+
+                    delete pClientSession;
+                    pClientSession = 0;
+
                     proxyRedirectRequested = true; // only allow useproxy once
 
                     std::streamsize n = StreamUtils::consume(responseStream);
 
-                    ofLogVerbose("Client::open") << "Got HTTP_USEPROXY, trying to use redirected proxy. (" << n << " bytes consumed)";
+                    ofLogVerbose("BaseClient::openResponseStream") <<
+                        "Got HTTP_USEPROXY, trying to use redirected proxy. (" << n << " bytes consumed)";
 
-                } else {
-                    ofLogVerbose("Client::open") << "Got other response " << pResponse.getStatus() << " b/c " << pResponse.getReason();
+                }
+                else
+                {
+                    ofLogVerbose("BaseClient::openResponseStream") << "Received unhandled response " <<
+                        pResponse.getStatus() << " b/c " << pResponse.getReason();
                     return new ResponseStream(pResponse,
-                                              new Poco::Net::HTTPResponseStream(responseStream, pSession),
+                                              new HTTPResponseStream(responseStream, pClientSession),
                                               new Poco::Exception(pResponse.getReason(), uri.toString()));
                 }
 
-            } while (authenticationRequested || proxyRedirectRequested);
-
+            }
+            while (authenticationRequested || proxyRedirectRequested);
         }
-    } catch(const Poco::Net::HostNotFoundException& exc) {
-        ofLogVerbose("Client::open") << "Got exception " << exc.displayText();
-        return new ResponseStream(pResponse, NULL, exc.clone());
-    } catch(const Poco::Exception& exc) {
-        ofLogVerbose("Client::open") << "Got exception " << exc.displayText();
-        return new ResponseStream(pResponse, NULL, exc.clone());
-    } catch(...) {
-        ofLogVerbose("Client::open") << "Got unknown exception";
-        return new ResponseStream(pResponse, NULL, new Poco::Exception("Unknown exception"));
+    }
+    catch(const Poco::SyntaxException& exc)
+    {
+        ofLogVerbose("BaseClient::openResponseStream") << "Got Syntax exception " << exc.displayText();
+        return new ResponseStream(pResponse, 0, exc.clone());
+    }
+    catch(const HostNotFoundException& exc)
+    {
+        ofLogVerbose("BaseClient::openResponseStream") << "Got exception " << exc.displayText();
+        return new ResponseStream(pResponse, 0, exc.clone());
+    }
+    catch(const Poco::Exception& exc)
+    {
+        ofLogVerbose("BaseClient::openResponseStream") << "Got exception " << exc.displayText();
+        return new ResponseStream(pResponse, 0, exc.clone());
+    }
+    catch(...)
+    {
+        ofLogVerbose("BaseClient::openResponseStream") << "Got unknown exception";
+        return new ResponseStream(pResponse, 0, new Poco::Exception("Unknown exception"));
     }
 
     return new ResponseStream(pResponse,
-                              NULL,
+                              0,
                               new Poco::IOException("Too many redirects while opening URI", request.getURI().toString()));
 }
 

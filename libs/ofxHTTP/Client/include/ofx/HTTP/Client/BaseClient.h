@@ -39,7 +39,9 @@
 #include "ofx/HTTP/AbstractTypes.h"
 #include "ofx/HTTP/Client/SessionSettings.h"
 #include "ofx/HTTP/StreamUtils.h"
+#include "ofx/HTTP/Client/BaseRequest.h"
 
+using namespace Poco::Net;
 
 namespace ofx {
 namespace HTTP {
@@ -57,7 +59,7 @@ public:
 
     virtual ~BaseClient();
     
-//    ResponseStream* execute(const Request::BaseRequest& _request);
+    ResponseStream::SharedPtr execute(const BaseRequest& request);
 
 //    void exectute(const Request::BaseRequest& _request,
 //                  AbstractResponseStreamConsumer* consumer);
@@ -79,8 +81,7 @@ public:
 protected:
     void update(ofEventArgs& args);
 
-    static ResponseStream* openResponseStream(const BaseRequest& request,
-                                              ClientContext::SharedPtr context);
+    static ResponseStream::SharedPtr openResponseStream(const BaseRequest& request, ClientContext::SharedPtr context);
         
 //    Poco::Thread _syncThread; // thread for executing syncronous calls
 //                              // must always be immediately joined

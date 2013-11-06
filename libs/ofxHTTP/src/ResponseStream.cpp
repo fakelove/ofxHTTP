@@ -31,13 +31,14 @@ namespace HTTP {
         
 
 //------------------------------------------------------------------------------
-ResponseStream::ResponseStream(Poco::Net::HTTPResponse& pResponse,
-                               Poco::Net::HTTPResponseStream* responseStream,
-                               Poco::Exception* exception):
-    _httpResponseStream(responseStream),
+ResponseStream::ResponseStream(Poco::Net::HTTPResponse& responseRef,
+                               Poco::Net::HTTPResponseStream* pResponseStream,
+                               Poco::Exception* pException):
+//    _resonseRef(responseRef),
+    _pResponseStream(responseRef),
     _contentLength(pResponse.getContentLength()),
-    _version(pResponse.getVersion()),
-    _status(pResponse.getStatus()),
+    _version(responseRef.getVersion()),
+    _status(responseRef.getStatus()),
     _reason(pResponse.getReason()),
     _isKeepAlive(pResponse.getKeepAlive()),
     _contentType(pResponse.getContentType()),
@@ -45,7 +46,7 @@ ResponseStream::ResponseStream(Poco::Net::HTTPResponse& pResponse,
     _bChunkedTransferEncoding(pResponse.getChunkedTransferEncoding()),
     _headers(pResponse),
     _fieldLimit(pResponse.getFieldLimit()),
-    _exception(exception)
+    _pException(pException)
 {
     // fill cookies
     pResponse.getCookies(_cookies);
@@ -56,8 +57,9 @@ ResponseStream::ResponseStream(Poco::Net::HTTPResponse& pResponse,
 ResponseStream::~ResponseStream()
 {
     // deleting a null pointer is a noop
-    delete _httpResponseStream; // cleans up the stream and the backing session
+//    delete _httpResponseStream; // cleans up the stream and the backing session
     delete _exception;
+    _exception = 0;
 }
 
 //------------------------------------------------------------------------------
@@ -73,7 +75,7 @@ std::string ResponseStream::getReasonForStatus() const
 }
 
 //------------------------------------------------------------------------------
-vector<Poco::Net::HTTPCookie> ResponseStream::getCookies() const
+std::vector<Poco::Net::HTTPCookie> ResponseStream::getCookies() const
 {
     return _cookies;
 }
@@ -108,11 +110,11 @@ bool ResponseStream::getChunkedTransferEncoding() const
     return _bChunkedTransferEncoding;
 }
 
-//------------------------------------------------------------------------------
-bool ResponseStream::hasResponseStream() const
-{
-    return _httpResponseStream != NULL;
-}
+////------------------------------------------------------------------------------
+//bool ResponseStream::hasResponseStream() const
+//{
+//    return _httpResponseStream != NULL;
+//}
 
 //------------------------------------------------------------------------------
 bool ResponseStream::hasException() const
@@ -127,7 +129,7 @@ Poco::Exception* ResponseStream::getException() const
 }
 
 //------------------------------------------------------------------------------
-std::istream* ResponseStream::getResponseStream() const
+std::istream& ResponseStream::getResponseStream() const
 {
     return _httpResponseStream;
 }

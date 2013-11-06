@@ -31,12 +31,12 @@ namespace HTTP {
         
 
 //------------------------------------------------------------------------------
-std::streamsize StreamUtils::consume(ResponseStream* responseStream,
+std::streamsize StreamUtils::consume(ResponseStream& responseStream,
                                      std::size_t bufferSize)
 {
-    if(responseStream != NULL && responseStream->hasResponseStream())
+    if(responseStream.hasResponseStream())
     {
-        return consume(*responseStream->getResponseStream(),bufferSize);
+        return consume(responseStream.getResponseStream(),bufferSize);
     }
     else
     {
@@ -53,13 +53,13 @@ std::streamsize StreamUtils::consume(std::istream& istr, std::size_t bufferSize)
 }
 
 //------------------------------------------------------------------------------
-std::streamsize StreamUtils::copyToString(ResponseStream* responseStream,
+std::streamsize StreamUtils::copyToString(ResponseStream& responseStream,
                                           std::string& str,
                                           std::size_t bufferSize)
 {
-    if(responseStream != NULL && responseStream->hasResponseStream())
+    if(responseStream.hasResponseStream())
     {
-        return copyToString(*responseStream->getResponseStream(),
+        return copyToString(responseStream.getResponseStream(),
                             str,
                             bufferSize);
     }
@@ -78,13 +78,13 @@ std::streamsize StreamUtils::copyToString(std::istream& istr,
 }
 
 //------------------------------------------------------------------------------
-std::streamsize StreamUtils::copyTo(ResponseStream* responseStream,
+std::streamsize StreamUtils::copyTo(ResponseStream& responseStream,
                                     std::ostream& ostr,
                                     std::size_t bufferSize)
 {
-    if(responseStream != NULL && responseStream->hasResponseStream())
+    if(responseStream.hasResponseStream())
     {
-        return copyTo(*responseStream->getResponseStream(),ostr,bufferSize);
+        return copyTo(responseStream.getResponseStream(),ostr,bufferSize);
     }
     else
     {
