@@ -26,8 +26,8 @@
 #pragma once
 
 
-#include <string>
 #include <map>
+#include <string>
 #include "Poco/URI.h"
 #include "Poco/Net/NameValueCollection.h"
 #include "ofx/HTTP/Client/BaseRequest.h"

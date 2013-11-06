@@ -30,75 +30,81 @@ namespace ofx {
 namespace HTTP {
         
 
-//------------------------------------------------------------------------------
-std::streamsize StreamUtils::consume(ResponseStream& responseStream,
-                                     std::size_t bufferSize)
-{
-    if(responseStream.hasResponseStream())
-    {
-        return consume(responseStream.getResponseStream(),bufferSize);
-    }
-    else
-    {
-        return 0; // error
-    }
-}
-
-//------------------------------------------------------------------------------
-std::streamsize StreamUtils::consume(std::istream& istr, std::size_t bufferSize)
-{
-    Poco::NullOutputStream nos;
-    
-    return Poco::StreamCopier::copyStream(istr,nos,bufferSize);
-}
-
-//------------------------------------------------------------------------------
-std::streamsize StreamUtils::copyToString(ResponseStream& responseStream,
-                                          std::string& str,
-                                          std::size_t bufferSize)
-{
-    if(responseStream.hasResponseStream())
-    {
-        return copyToString(responseStream.getResponseStream(),
-                            str,
-                            bufferSize);
-    }
-    else
-    {
-        return 0; // error
-    }
-}
-
-//------------------------------------------------------------------------------
-std::streamsize StreamUtils::copyToString(std::istream& istr,
-                                          std::string& str,
-                                          std::size_t bufferSize)
-{
-    return Poco::StreamCopier::copyToString(istr,str,bufferSize);
-}
-
-//------------------------------------------------------------------------------
-std::streamsize StreamUtils::copyTo(ResponseStream& responseStream,
-                                    std::ostream& ostr,
-                                    std::size_t bufferSize)
-{
-    if(responseStream.hasResponseStream())
-    {
-        return copyTo(responseStream.getResponseStream(),ostr,bufferSize);
-    }
-    else
-    {
-        return 0; // error
-    }
-}
-    
-//------------------------------------------------------------------------------
-std::streamsize StreamUtils::copyTo(istream& istr,
-                                    ostream& ostr,
-                                    std::size_t bufferSize)
-{
-    return Poco::StreamCopier::copyStream(istr,ostr,bufferSize);
-}
+//std::streamsize StreamUtils::consume(ResponseStream& responseStream,
+//                                     std::size_t bufferSize)
+//{
+//    if(responseStream.hasResponseStream())
+//    {
+//        return consume(responseStream.getResponseStreamRef(),
+//                       bufferSize);
+//    }
+//    else
+//    {
+//        return 0; // error
+//    }
+//}
+//
+//
+//std::streamsize StreamUtils::consume(std::istream& istr, std::size_t bufferSize)
+//{
+//    Poco::NullOutputStream nos;
+//    
+//    return Poco::StreamCopier::copyStream(istr, nos, bufferSize);
+//}
+//
+//
+//std::streamsize StreamUtils::copyToString(ResponseStream& responseStream,
+//                                          std::string& str,
+//                                          std::size_t bufferSize)
+//{
+//    if(responseStream.hasResponseStream())
+//    {
+//        return copyToString(responseStream.getResponseStreamRef(),
+//                            str,
+//                            bufferSize);
+//    }
+//    else
+//    {
+//        return 0; // error
+//    }
+//}
+//
+//
+//std::streamsize StreamUtils::copyToString(std::istream& istr,
+//                                          std::string& str,
+//                                          std::size_t bufferSize)
+//{
+//    return Poco::StreamCopier::copyToString(istr,
+//                                            str,
+//                                            bufferSize);
+//}
+//
+//
+//std::streamsize StreamUtils::copyTo(ResponseStream& responseStream,
+//                                    std::ostream& ostr,
+//                                    std::size_t bufferSize)
+//{
+//    if(responseStream.hasResponseStream())
+//    {
+//        return copyTo(responseStream.getResponseStreamRef(),
+//                      ostr,
+//                      bufferSize);
+//    }
+//    else
+//    {
+//        return 0; // error
+//    }
+//}
+//    
+//
+//std::streamsize StreamUtils::copyTo(istream& istr,
+//                                    ostream& ostr,
+//                                    std::size_t bufferSize)
+//{
+//    return Poco::StreamCopier::copyStream(istr,
+//                                          ostr,
+//                                          bufferSize);
+//}
 
 
 } } // namespace ofx::HTTP

@@ -43,27 +43,29 @@
 
 namespace ofx {
 namespace HTTP {
+namespace Client {
 
 
-class ClientContext {
+class Context
+{
 public:
-    typedef std::shared_ptr<ClientContext> SharedPtr;
+    typedef std::shared_ptr<Context> SharedPtr;
 
-    ClientContext();
+    Context();
     
-    ClientContext(SessionSettings& _settings);
+    Context(SessionSettings& _settings);
 
-    ClientContext(SessionSettings& _settings,
-                  CredentialStore& _credentialStore);
+    Context(SessionSettings& _settings,
+            CredentialStore& _credentialStore);
 
-    ClientContext(SessionSettings& _settings,
-                  CredentialStore& _credentialStore,
-                  CookieStore& _cookieStore);
+    Context(SessionSettings& _settings,
+            CredentialStore& _credentialStore,
+            CookieStore& _cookieStore);
     
-    ClientContext(ClientContext& that);
-	ClientContext& operator = (ClientContext& that);
+    Context(Context& that);
+	Context& operator = (Context& that);
     
-    virtual ~ClientContext();
+    virtual ~Context();
    
     SessionSettings getSessionSettings();
     SessionSettings& getSessionSettingsRef();
@@ -87,12 +89,12 @@ public:
 
     static SharedPtr makeShared()
     {
-        return SharedPtr(new ClientContext());
+        return SharedPtr(new Context());
     }
 
 private:
-    ClientContext(const ClientContext& that);
-	ClientContext& operator = (const ClientContext& that);
+    Context(const Context& that);
+	Context& operator = (const Context& that);
 
     // client settings (i.e. thread pools, # connections, etc).
     // vs. context-settings (num redirects, auth handlers, etc).
@@ -105,4 +107,4 @@ private:
 };
 
 
-} } // namespace ofx::HTTP
+} } } // namespace ofx::HTTP::Client

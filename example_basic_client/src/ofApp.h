@@ -27,6 +27,8 @@
 
 
 #include "ofMain.h"
+#include "ofxHTTP.h"
+
 
 
 class ofApp: public ofBaseApp
@@ -45,5 +47,7 @@ public:
     void windowResized(int w, int h);
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
+
+
     
 };

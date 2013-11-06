@@ -26,46 +26,47 @@
 #pragma once
 
 
+#include "Poco/StreamCopier.h"
 #include "ofConstants.h"
-#include "ofx/HTTP/ResponseStream.h"
+#include "ofx/HTTP/Client/ResponseStream.h"
 
 
 namespace ofx {
 namespace HTTP {
     
 
-class StreamUtils
-{
-public:
-    static std::streamsize consume(ResponseStream& responseStream,
-                                   std::size_t bufferSize = DEFAULT_BUFFER_SIZE);
-
-    static std::streamsize consume(std::istream& istr,
-                                   std::size_t bufferSize = DEFAULT_BUFFER_SIZE);
-    
-    static std::streamsize copyToString(ResponseStream& responseStream,
-                                        std::string& str,
-                                        std::size_t bufferSize = DEFAULT_BUFFER_SIZE);
-
-    static std::streamsize copyToString(std::istream& istr,
-                                        std::string& str,
-                                        std::size_t bufferSize = DEFAULT_BUFFER_SIZE);
-    
-    static std::streamsize copyTo(ResponseStream& responseStream,
-                                  std::ostream& ostr,
-                                  std::size_t bufferSize = DEFAULT_BUFFER_SIZE);
-
-    static std::streamsize copyTo(std::istream& istr,
-                                  std::ostream& ostr,
-                                  std::size_t bufferSize = DEFAULT_BUFFER_SIZE);
-
-protected:
-    enum
-    {
-        DEFAULT_BUFFER_SIZE = 8192
-    };
-
-};
+//class StreamUtils
+//{
+//public:
+//    static std::streamsize consume(ResponseStream& responseStream,
+//                                   std::size_t bufferSize = DEFAULT_BUFFER_SIZE);
+//
+//    static std::streamsize consume(std::istream& istr,
+//                                   std::size_t bufferSize = DEFAULT_BUFFER_SIZE);
+//    
+//    static std::streamsize copyToString(ResponseStream& responseStream,
+//                                        std::string& str,
+//                                        std::size_t bufferSize = DEFAULT_BUFFER_SIZE);
+//
+//    static std::streamsize copyToString(std::istream& istr,
+//                                        std::string& str,
+//                                        std::size_t bufferSize = DEFAULT_BUFFER_SIZE);
+//    
+//    static std::streamsize copyTo(ResponseStream& responseStream,
+//                                  std::ostream& ostr,
+//                                  std::size_t bufferSize = DEFAULT_BUFFER_SIZE);
+//
+//    static std::streamsize copyTo(std::istream& istr,
+//                                  std::ostream& ostr,
+//                                  std::size_t bufferSize = DEFAULT_BUFFER_SIZE);
+//
+//protected:
+//    enum
+//    {
+//        DEFAULT_BUFFER_SIZE = 8192
+//    };
+//
+//};
 
     
 } } // namespace ofx::HTTP

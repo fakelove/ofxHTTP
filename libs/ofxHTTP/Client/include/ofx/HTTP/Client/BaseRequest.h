@@ -44,8 +44,8 @@ namespace HTTP {
 namespace Client {
 
 
-class BaseClient;  // N.B. forward declaration needed for sub-namespace
-                   // to befriend a class in a parent namespace
+class ResponseStream;  // N.B. forward declaration needed for sub-namespace
+                       // to befriend a class in a parent namespace
 
 class BaseRequest
 {
@@ -105,7 +105,7 @@ protected:
     Poco::Net::NameValueCollection _headers;
 
 
-    friend class BaseClient;
+    friend class ResponseStream;
     
 };
 

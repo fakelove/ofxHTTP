@@ -29,6 +29,28 @@
 //------------------------------------------------------------------------------
 void ofApp::setup()
 {
+    ofSetLogLevel(OF_LOG_VERBOSE);
+
+    ofx::HTTP::Client::Context::SharedPtr context = ofx::HTTP::Client::Context::makeShared();
+
+    std::string url = "http://koivi.com/archives/php-http-auth/protect.php";
+
+    Poco::URI uri(url);
+
+    ofx::HTTP::Client::GetRequest get(uri);
+
+
+    context->getCredentialStoreRef().setCredentials(ofx::HTTP::AuthScope(get.getURI()),
+                                                    ofx::HTTP::Credentials("tester","testing"));
+
+    ofx::HTTP::Client::ResponseStream::SharedPtr response = ofx::HTTP::Client::ResponseStream::createResponseStream(get, context);
+
+
+    if(!response->hasException()) {
+        Poco::StreamCopier::copyStream(response->getResponseStreamRef(), cout);
+    } else {
+        cout << response->getException()->message() << endl;
+    }
 }
 
 //------------------------------------------------------------------------------

@@ -23,36 +23,37 @@
 // =============================================================================
 
 
-#include "ofx/HTTP/Client/ClientContext.h"
+#include "ofx/HTTP/Client/Context.h"
 
 
 namespace ofx {
 namespace HTTP {
+namespace Client {
 
     
 //------------------------------------------------------------------------------
-ClientContext::ClientContext()
+Context::Context()
 {
 }
 
 //------------------------------------------------------------------------------
-ClientContext::ClientContext(SessionSettings& sessionSettings):
+Context::Context(SessionSettings& sessionSettings):
     _sessionSettings(sessionSettings)
 {
 }
 
 //------------------------------------------------------------------------------
-ClientContext::ClientContext(SessionSettings& sessionSettings,
-                             CredentialStore& credentialStore):
+Context::Context(SessionSettings& sessionSettings,
+                 CredentialStore& credentialStore):
     _sessionSettings(sessionSettings),
     _credentialStore(credentialStore)
 {
 }
 
 //------------------------------------------------------------------------------
-ClientContext::ClientContext(SessionSettings& sessionSettings,
-                             CredentialStore& credentialStore,
-                             CookieStore& cookieStore):
+Context::Context(SessionSettings& sessionSettings,
+                 CredentialStore& credentialStore,
+                 CookieStore& cookieStore):
     _sessionSettings(sessionSettings),
     _credentialStore(credentialStore),
     _cookieStore(cookieStore)
@@ -60,7 +61,7 @@ ClientContext::ClientContext(SessionSettings& sessionSettings,
 }
 
 //------------------------------------------------------------------------------
-ClientContext::ClientContext(ClientContext& that)
+Context::Context(Context& that)
 {
     _sessionSettings = that._sessionSettings;
     _credentialStore = that._credentialStore;
@@ -68,7 +69,7 @@ ClientContext::ClientContext(ClientContext& that)
 }
 
 //------------------------------------------------------------------------------
-ClientContext& ClientContext::operator = (ClientContext& that)
+Context& Context::operator = (Context& that)
 {
     _sessionSettings = that._sessionSettings;
     _credentialStore = that._credentialStore;
@@ -77,30 +78,30 @@ ClientContext& ClientContext::operator = (ClientContext& that)
 }
 
 //------------------------------------------------------------------------------
-ClientContext::~ClientContext()
+Context::~Context()
 {
 }
 
 //------------------------------------------------------------------------------
-SessionSettings ClientContext::getSessionSettings()
-{
-    return _sessionSettings;
-}
-
-//------------------------------------------------------------------------------
-SessionSettings& ClientContext::getSessionSettingsRef()
+SessionSettings Context::getSessionSettings()
 {
     return _sessionSettings;
 }
 
 //------------------------------------------------------------------------------
-CookieStore ClientContext::getCookieStore()
+SessionSettings& Context::getSessionSettingsRef()
+{
+    return _sessionSettings;
+}
+
+//------------------------------------------------------------------------------
+CookieStore Context::getCookieStore()
 {
     return _cookieStore;
 }
 
 //------------------------------------------------------------------------------
-CookieStore& ClientContext::getCookieStoreRef()
+CookieStore& Context::getCookieStoreRef()
 {
     return _cookieStore;
 }
@@ -113,13 +114,13 @@ CookieStore& ClientContext::getCookieStoreRef()
 //}
 
 //------------------------------------------------------------------------------
-CredentialStore ClientContext::getCredentialStore()
+CredentialStore Context::getCredentialStore()
 {
     return _credentialStore;
 }
 
 //------------------------------------------------------------------------------
-CredentialStore& ClientContext::getCredentialStoreRef()
+CredentialStore& Context::getCredentialStoreRef()
 {
     return _credentialStore;
 }
@@ -143,6 +144,6 @@ CredentialStore& ClientContext::getCredentialStoreRef()
 //bool ClientContext::authenticate(HTTPRequest& request, HTTPResponse& response) {
 //
 //}
-//
 
-} } // namespace ofx::HTTP
+
+} } } // namespace ofx::HTTP::Client

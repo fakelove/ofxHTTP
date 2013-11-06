@@ -26,20 +26,18 @@
 #pragma once
 
 
+#include <istream>
+//#include <vector>
+//#include "Poco/URI.h"
 #include "Poco/Exception.h"
 #include "Poco/NullStream.h"
-#include "Poco/Thread.h"
-#include "Poco/ThreadPool.h"
-#include "Poco/StreamCopier.h"
-#include "Poco/URI.h"
-#include "Poco/Net/HTTPAuthenticationParams.h"
-#include "Poco/Net/NetException.h"
-#include "ofEvents.h"
-#include "ofx/HTTP/AbstractTypes.h"
-#include "ofx/HTTP/StreamUtils.h"
+//#include "Poco/Net/HTTPCookie.h"
+#include "Poco/Net/HTTPResponse.h"
+#include "Poco/Net/HTTPIOStream.h"
 #include "ofx/HTTP/Client/BaseRequest.h"
 #include "ofx/HTTP/Client/Context.h"
-#include "ofx/HTTP/Client/SessionSettings.h"
+#include "ofx/HTTP/StreamUtils.h"
+#include "ofTypes.h"
 
 
 using namespace Poco::Net;
@@ -50,27 +48,45 @@ namespace HTTP {
 namespace Client {
 
 
-//class BaseClient
-//{
-//public:
-//    typedef std::shared_ptr<BaseClient> SharedPtr;
-//    typedef std::weak_ptr<BaseClient>   WeakPtr;
-//
-//protected:
-//    static ResponseStream::SharedPtr openResponseStream(const BaseRequest& request, Context::SharedPtr context);
-//        
-////    Poco::Thread _syncThread; // thread for executing syncronous calls
-////                              // must always be immediately joined
-//
-////    Context::SharedPtr _context;
-////
-////    Poco::ThreadPool& _threadPoolRef; // thread pool for executing asynchronous calls
-//
-//
-////    ofThreadErrorHandler errorHandler;
-////    ErrorHandler* previousErrorHandler;
-//    
-//};
+class ResponseStream: public HTTPResponse
+{
+public:
+    typedef std::shared_ptr<ResponseStream> SharedPtr;
+    typedef std::weak_ptr<ResponseStream>   WeakPtr;
+
+    ResponseStream(HTTPResponse& httpResponseRef,
+                   HTTPResponseStream* pResponseStream,
+                   Poco::Exception* pException = 0);
+
+    virtual ~ResponseStream();
+
+    bool hasResponseStream() const;
+    std::istream& getResponseStreamRef() const;
+
+    bool hasException() const;
+    Poco::Exception* getException() const;
+
+
+    static SharedPtr createResponseStream(const BaseRequest& request,
+                                          Context::SharedPtr context);
+
+protected:
+    HTTPResponse& _httpResponseRef;
+    HTTPResponseStream* _pResponseStream;
+    Poco::Exception* _pException;
+
+
+    static SharedPtr makeShared(HTTPResponse& httpResponseRef,
+                                HTTPResponseStream* pResponseStream,
+                                Poco::Exception* pException = 0)
+    {
+        return SharedPtr(new ResponseStream(httpResponseRef,
+                                            pResponseStream,
+                                            pException));
+    }
+
+
+};
 
 
 } } } // namespace ofx::HTTP::Client
