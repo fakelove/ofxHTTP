@@ -51,6 +51,14 @@ GetRequest::~GetRequest()
 //------------------------------------------------------------------------------
 void GetRequest::prepareRequest(Poco::Net::HTTPRequest& request) const
 {
+    // TODO: this is not the right place to do this.
+    Poco::Net::NameValueCollection::ConstIterator iter = _headers.begin();
+
+    while (iter != _headers.end())
+    {
+        request.set((*iter).first, (*iter).second);
+        ++iter;
+    }
 }
 
 

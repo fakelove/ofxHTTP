@@ -64,7 +64,7 @@ void CredentialStore::setCredentials(const AuthScope& scope,
 {
     if(!credentials.hasCredentials())
     {
-        ofLogWarning("ofxHTTPCredentialStore::setCredentials") << "Credentials are empty.  Ignoring.";
+        ofLogWarning("CredentialStore::setCredentials") << "Credentials are empty.  Ignoring.";
         return;
     }
         
@@ -139,8 +139,8 @@ bool CredentialStore::getCredentialsWithExistingLock(const AuthScope& targetScop
     HTTPCredentialMapIter iter = credentialMap.find(targetScope);
 
     // TODO
-    cout << "TARGET Scope = " << targetScope.toString() << endl;
-    cout << "TARGET CREDZ = " << targetScope.toString() << endl;
+//    cout << "TARGET Scope = " << targetScope.toString() << endl;
+//    cout << "TARGET CREDZ = " << targetScope.toString() << endl;
 
     
 
@@ -205,11 +205,11 @@ bool CredentialStore::authenticate(const Poco::Net::HTTPClientSession& pSession,
     // these could be added via default session headers
     if(pRequest.has(Poco::Net::HTTPRequest::AUTHORIZATION))
     {
-        ofLogVerbose("ofxHTTPCredentialStore::authenticate") << "HTTP Authorization headers already set.  Skipping authentication.";
+        ofLogVerbose("CredentialStore::authenticate") << "HTTP Authorization headers already set.  Skipping authentication.";
         return false;
     }
 
-    AuthScope    targetScope(pSession.getHost(),pSession.getPort());
+    AuthScope    targetScope(pSession.getHost(), pSession.getPort());
     Credentials  matchingCredentials;
     AuthScope    matchingScope;
     
@@ -238,12 +238,12 @@ bool CredentialStore::authenticate(const Poco::Net::HTTPClientSession& pSession,
             return true;
         }
         
-        ofLogVerbose("ofxHTTPCredentialStore::authenticate") << "Had no matching cached credentials for preemptive authentication.";
+        ofLogVerbose("CredentialStore::authenticate") << "Had no matching cached credentials for preemptive authentication.";
         return false;
     }
     else
     {
-        ofLogVerbose("ofxHTTPCredentialStore::authenticate") << "Had no matching credentials for preemptive authentication.";
+        ofLogVerbose("CredentialStore::authenticate") << "Had no matching credentials for preemptive authentication.";
         return false;
     }    
 }
@@ -272,7 +272,7 @@ bool CredentialStore::authenticate(const Poco::Net::HTTPClientSession& pSession,
             }
             else
             {
-                ofLogError("ofxHTTPCredentialStore::authenticate") << "Incompatible or unknown WWW-Authenticate header.  Basic and digest supported: " << iter->second;
+                ofLogError("CredentialStore::authenticate") << "Incompatible or unknown WWW-Authenticate header.  Basic and digest supported: " << iter->second;
                 return false;
             }
 
@@ -282,36 +282,44 @@ bool CredentialStore::authenticate(const Poco::Net::HTTPClientSession& pSession,
             try
             {
                 params.fromResponse(pResponse);
-            
-            // it is very unlikely that any of the following exceptions will be thrown because we have already checked for most.
+                // it is very unlikely that any of the following exceptions will be thrown because we have already checked for most.
             }
             catch (const Poco::Net::NotAuthenticatedException& exc)
             {
-                ofLogError("ofxHTTPCredentialStore::authenticate") << "HTTP response has no authentication header.";
+                ofLogError("CredentialStore::authenticate") << "HTTP response has no authentication header.";
                 return false;
             }
             catch (const Poco::InvalidArgumentException& exc)
             {
-                ofLogError("ofxHTTPCredentialStore::authenticate") << "Incompatible or unknown WWW-Authenticate header.  Basic and digest supported: " << iter->second;
+                ofLogError("CredentialStore::authenticate") << "Incompatible or unknown WWW-Authenticate header.  Basic and digest supported: " << iter->second;
                 return false;
             }
             catch (const Poco::SyntaxException& exc)
             {
-                ofLogError("ofxHTTPCredentialStore::authenticate") << "Error parsing WWW-Authenticate header: "  << iter->second;
+                ofLogError("CredentialStore::authenticate") << "Error parsing WWW-Authenticate header: "  << iter->second;
                 return false;
             }
 
             std::string scheme = pSession.secure() ? "https" : "http";
             
-            AuthScope    targetScope(scheme,pSession.getHost(),pSession.getPort(),params.getRealm(),requestedAuthType);
-            Credentials  matchingCredentials;
-            AuthScope    matchingScope;
+            AuthScope targetScope(scheme,
+                                  pSession.getHost(),
+                                  pSession.getPort(),
+                                  params.getRealm(),
+                                  requestedAuthType);
+
+            Credentials matchingCredentials;
+
+            AuthScope matchingScope;
             
             Poco::FastMutex::ScopedLock lock(mutex);
-            if(getCredentialsWithExistingLock(targetScope, matchingScope, matchingCredentials))
+            
+            if(getCredentialsWithExistingLock(targetScope,
+                                              matchingScope,
+                                              matchingCredentials))
             {
-                cout << "HAD CREDS FOR TARGET SCOPE =" << targetScope.toString() << endl;
-                cout << "HAD CREDS FOR MATCHING SCOPE =" << matchingScope.toString() << endl;
+                cout << "HAD CREDS FOR TARGET SCOPE   = " << targetScope.toString() << endl;
+                cout << "HAD CREDS FOR MATCHING SCOPE = " << matchingScope.toString() << endl;
                 if(requestedAuthType == BASIC)
                 {
                     // replace any old ones (probably means they failed and were updated somewhere)
@@ -327,24 +335,24 @@ bool CredentialStore::authenticate(const Poco::Net::HTTPClientSession& pSession,
                 }
                 else
                 {
-                    ofLogError("ofxHTTPCredentialStore::authenticate") << "Unknown requestedAuthType: " << requestedAuthType;
+                    ofLogError("CredentialStore::authenticate") << "Unknown requestedAuthType: " << requestedAuthType;
                     return false;
                 }
             }
             else
             {
-                ofLogVerbose("ofxHTTPCredentialStore::authenticate") << "Had no matching credentials for authentication.";
+                ofLogVerbose("CredentialStore::authenticate") << "Had no matching credentials for authentication.";
                 return false;
             }
         }
         
-        ofLogVerbose("ofxHTTPCredentialStore::authenticate") << "Response was unauthorized, but could not find WWW-Authenticate header.";
+        ofLogVerbose("CredentialStore::authenticate") << "Response was unauthorized, but could not find WWW-Authenticate header.";
         return false;
 
     }
     else
     {
-        ofLogVerbose("ofxHTTPCredentialStore::authenticate") << "Response was not unauthorized.  Nothing to be done.";
+        ofLogVerbose("CredentialStore::authenticate") << "Response was not unauthorized.  Nothing to be done.";
         return false;
     }
     

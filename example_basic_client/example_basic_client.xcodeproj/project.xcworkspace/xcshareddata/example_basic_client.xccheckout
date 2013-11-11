@@ -5,12 +5,12 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>DD72C568-EF47-405D-A762-1FCD55C4A19E</string>
+	<string>EBE1C3B1-0434-48C0-A23B-C46221FFCC8B</string>
 	<key>IDESourceControlProjectName</key>
 	<string>example_basic_client</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>45B414AD-06FD-4497-9C7A-E1A33FADFECF</key>
+		<key>3B34514A-1075-456B-8AF0-DAEFD698200B</key>
 		<string>ssh://github.com/bakercp/openFrameworks.git</string>
 		<key>504B70F9-73C2-4DBF-8EDD-10A9259C4D1E</key>
 		<string>ssh://github.com/bakercp/ofxJSON.git</string>
@@ -20,12 +20,14 @@
 		<string>ssh://github.com/bakercp/ofxHTTP.git</string>
 		<key>EBBC5B26-06CF-4838-9791-CDAC1B4CC1D4</key>
 		<string>ssh://github.com/bakercp/ofxMediaType.git</string>
+		<key>EE697087-E1D0-4308-8BB1-A584901F6D3A</key>
+		<string>ssh://github.com/bakercp/ofxIO.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>addons/ofxHTTP/example_basic_client/example_basic_client.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>45B414AD-06FD-4497-9C7A-E1A33FADFECF</key>
+		<key>3B34514A-1075-456B-8AF0-DAEFD698200B</key>
 		<string>../../../../..</string>
 		<key>504B70F9-73C2-4DBF-8EDD-10A9259C4D1E</key>
 		<string>../../../../ofxJSON</string>
@@ -35,13 +37,15 @@
 		<string>../../..</string>
 		<key>EBBC5B26-06CF-4838-9791-CDAC1B4CC1D4</key>
 		<string>../../../../ofxMediaType</string>
+		<key>EE697087-E1D0-4308-8BB1-A584901F6D3A</key>
+		<string>../../../../ofxIO</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>ssh://github.com/bakercp/ofxHTTP.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>45B414AD-06FD-4497-9C7A-E1A33FADFECF</string>
+	<string>3B34514A-1075-456B-8AF0-DAEFD698200B</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
@@ -51,6 +55,14 @@
 			<string>86C74F92-0BD2-4A5B-9213-67E23AA5BF7C</string>
 			<key>IDESourceControlWCCName</key>
 			<string>ofxHTTP</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>EE697087-E1D0-4308-8BB1-A584901F6D3A</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ofxIO</string>
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
@@ -80,7 +92,7 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>45B414AD-06FD-4497-9C7A-E1A33FADFECF</string>
+			<string>3B34514A-1075-456B-8AF0-DAEFD698200B</string>
 			<key>IDESourceControlWCCName</key>
 			<string>openFrameworks</string>
 		</dict>

@@ -58,9 +58,9 @@ public:
     const Poco::Net::NameValueCollection& getFormFiles() const;
 
 protected:
-    virtual void prepareRequest(Poco::Net::HTTPClientSession& session,
-                                Poco::Net::HTTPRequest& request,
-                                Poco::Net::HTTPResponse& response);
+    virtual void prepareRequest(Poco::Net::HTTPRequest& request) const;
+
+
 
     Poco::Net::NameValueCollection _formFiles;
 

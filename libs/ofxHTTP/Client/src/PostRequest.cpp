@@ -109,10 +109,16 @@ const Poco::Net::NameValueCollection& PostRequest::getFormFiles() const
 }
 
 //------------------------------------------------------------------------------
-void PostRequest::prepareRequest(Poco::Net::HTTPClientSession& session,
-                                 Poco::Net::HTTPRequest& request,
-                                 Poco::Net::HTTPResponse& response)
+void PostRequest::prepareRequest(Poco::Net::HTTPRequest& request) const
 {
+    // TODO: this is not the right place to do this.
+    Poco::Net::NameValueCollection::ConstIterator iter = _headers.begin();
+
+    while (iter != _headers.end())
+    {
+        request.set((*iter).first, (*iter).second);
+        ++iter;
+    }
 }
 
 

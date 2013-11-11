@@ -76,9 +76,13 @@ std::istream& ResponseStream::getResponseStreamRef() const
 }
 
 
-ResponseStream::SharedPtr ResponseStream::createResponseStream(const BaseRequest& request,
+ResponseStream::SharedPtr ResponseStream::createResponseStream(BaseRequest& httpRequest,
                                                                Context::SharedPtr context)
 {
+
+    // init default client ssl context if none exists
+    ofx::SSLManager::initializeClient();
+
     HTTPResponse httpResponse;
 
     SessionSettings& sessionSettings = context->getSessionSettingsRef();  // get a copy of the session settings
@@ -89,8 +93,6 @@ ResponseStream::SharedPtr ResponseStream::createResponseStream(const BaseRequest
 
     try
     {
-        Poco::URI uri(request.getURI());
-
         ofLogVerbose("ResponseStream::createResponseStream") << "Beginning redirect loop. Max redirects = " <<
         context->getSessionSettingsRef().getMaxRedirects() ;
 
@@ -98,7 +100,7 @@ ResponseStream::SharedPtr ResponseStream::createResponseStream(const BaseRequest
         {
             // URI resolvedURI(targetURI);
             Poco::URI redirectedProxyUri;
-            HTTPClientSession* pClientSession; //
+            HTTPClientSession* pClientSession = 0;
             bool proxyRedirectRequested = false;
             bool authenticationRequested = false;
             // bool authenticationAttempted = false;
@@ -108,9 +110,17 @@ ResponseStream::SharedPtr ResponseStream::createResponseStream(const BaseRequest
             do
             {
                 // pClientSession will be deleted if proxy is redirected
-                if (0 != pClientSession)
+                if (0 == pClientSession)
                 {
-                    pClientSession = new HTTPClientSession(uri.getHost(), uri.getPort());
+
+                    if(httpRequest.getURI().getScheme() == "https")
+                    {
+                        pClientSession = new HTTPSClientSession(httpRequest.getURI().getHost(), httpRequest.getURI().getPort());
+                    }
+                    else
+                    {
+                        pClientSession = new HTTPClientSession(httpRequest.getURI().getHost(), httpRequest.getURI().getPort());
+                    }
 
                     ofLogVerbose("ResponseStream::createResponseStream") << "New session created - host: " <<
                     pClientSession->getHost() << " port: " << pClientSession->getPort();
@@ -148,14 +158,18 @@ ResponseStream::SharedPtr ResponseStream::createResponseStream(const BaseRequest
                             ofLogVerbose("ResponseStream::createResponseStream") << "Without proxy credentials.";
                         }
                     }
+
                 }
                 else
                 {
-                    ofLogVerbose("ResponseStream::createResponseStream") << "Using existing session - host: " <<
-                    pClientSession->getHost() << " port: " << pClientSession->getPort();
+                    ofLogVerbose("ResponseStream::createResponseStream") <<
+                        "Using existing session - host: " <<
+                        pClientSession->getHost() <<
+                        " port: " << pClientSession->getPort();
                 }
 
-                std::string path = uri.getPathAndQuery();
+
+                std::string path = httpRequest.getURI().getPathAndQuery();
 
                 if(path.empty())
                 {
@@ -164,9 +178,12 @@ ResponseStream::SharedPtr ResponseStream::createResponseStream(const BaseRequest
 
                 ofLogVerbose("ResponseStream::createResponseStream") << "Using path: " << path;
 
-                Poco::Net::HTTPRequest httpRequest(request.getMethod(),
-                                                   path,
-                                                   request.getVersion());
+//                Poco::Net::HTTPRequest httpRequest(request.getMethod(),
+//                                                   path,
+//                                                   request.getVersion());
+
+                
+
 
                 // apply defaults from the session first
                 // TODO: default headers could also include useragent, etc ...
@@ -201,11 +218,22 @@ ResponseStream::SharedPtr ResponseStream::createResponseStream(const BaseRequest
                     credentials.authenticate(*pClientSession, httpRequest);
                 }
 
-
                 // call back into the request to pull the request data
                 ofLogVerbose("ResponseStream::createResponseStream") << "Preparing request.";
 
                 request.prepareRequest(httpRequest);
+
+
+                NameValueCollection::ConstIterator iter = httpRequest.begin();
+
+                cout << "HEADERS-----" << endl;
+                while (iter != httpRequest.end())
+                {
+                    cout << (*iter).first << " = " << (*iter).second << endl;
+                    ++iter;
+                }
+                cout << "HEADERS-----" << endl;
+
 
                 //////////////////////////////////////////////////////////////////
                 /////////////////////// -- SEND REQUEST -- ///////////////////////
@@ -221,9 +249,7 @@ ResponseStream::SharedPtr ResponseStream::createResponseStream(const BaseRequest
                 ofLogVerbose("ResponseStream::createResponseStream") << "Receiving response.";
                 std::istream& responseStream = pClientSession->receiveResponse(httpResponse);
 
-
                 cookies.store(httpResponse);
-
 
                 if (httpResponse.getStatus() == HTTPResponse::HTTP_MOVED_PERMANENTLY   ||
                     httpResponse.getStatus() == HTTPResponse::HTTP_FOUND               ||
@@ -245,18 +271,23 @@ ResponseStream::SharedPtr ResponseStream::createResponseStream(const BaseRequest
                     ofLogVerbose("ResponseStream::createResponseStream") << "Got valid stream, returning.";
                     return ResponseStream::makeShared(httpResponse,
                                                       new HTTPResponseStream(responseStream,
-                                                                             pClientSession));
+                                                                             pClientSession),
+                                                      0);
                 }
                 else if (httpResponse.getStatus() == HTTPResponse::HTTP_UNAUTHORIZED &&
                          !authenticationRequested)
                 {
                     authenticationRequested = true;
 
+//                    if(ofGetLogLevel() )
 
                     Poco::NullOutputStream nos;
 
-                    std::streamsize n = Poco::StreamCopier::copyStream(responseStream, nos); // consume
+                    cout << endl;
 
+                    std::streamsize n = Poco::StreamCopier::copyStream(responseStream, cout); // consume
+
+                    cout << endl;
                     ofLogVerbose("ResponseStream::createResponseStream") <<
                     "Got HTTP_UNAUTHORIZED, trying to authorize with response this time. (" << n << " bytes consumed)";
 
@@ -278,7 +309,11 @@ ResponseStream::SharedPtr ResponseStream::createResponseStream(const BaseRequest
 
                     Poco::NullOutputStream nos;
 
-                    std::streamsize n = Poco::StreamCopier::copyStream(responseStream, nos); // consume
+                    cout << endl;
+
+                    std::streamsize n = Poco::StreamCopier::copyStream(responseStream, cout); // consume
+
+                    cout << endl;
 
                     ofLogVerbose("ResponseStream::createResponseStream") <<
                     "Got HTTP_USEPROXY, trying to use redirected proxy. (" << n << " bytes consumed)";
@@ -289,8 +324,10 @@ ResponseStream::SharedPtr ResponseStream::createResponseStream(const BaseRequest
                     ofLogVerbose("ResponseStream::createResponseStream") << "Received unhandled response " <<
                     httpResponse.getStatus() << " b/c " << httpResponse.getReason();
                     return ResponseStream::makeShared(httpResponse,
-                                                      new HTTPResponseStream(responseStream, pClientSession),
-                                                      new Poco::Exception(httpResponse.getReason(), uri.toString()));
+                                                      new HTTPResponseStream(responseStream,
+                                                                             pClientSession),
+                                                      new Poco::Exception(httpResponse.getReason(),
+                                                                          uri.toString()));
                 }
 
             }
@@ -328,11 +365,9 @@ ResponseStream::SharedPtr ResponseStream::createResponseStream(const BaseRequest
     
     return ResponseStream::makeShared(httpResponse,
                                       0,
-                                      new Poco::IOException("Too many redirects while opening URI", request.getURI().toString()));
+                                      new Poco::IOException("Too many redirects while opening URI", httpRequest.getURI().toString()));
     
 }
-
-
 
 
 } } } // namespace ofx::HTTP::Client

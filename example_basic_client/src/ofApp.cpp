@@ -31,26 +31,85 @@ void ofApp::setup()
 {
     ofSetLogLevel(OF_LOG_VERBOSE);
 
-    ofx::HTTP::Client::Context::SharedPtr context = ofx::HTTP::Client::Context::makeShared();
+    ofx::SSLManager::registerAllEvents(this);
 
-    std::string url = "http://koivi.com/archives/php-http-auth/protect.php";
+    HTTP::Client::Context::SharedPtr context = HTTP::Client::Context::makeShared();
+
+    std::string username = "username";
+    std::string password = "password";
+
+//    std::string url = "https://httpbin.org/relative-redirect/19";
+//    std::string url = "https://httpbin.org/basic-auth/" +  username +  "/" + password;
+//    std::string url = "https://httpbin.org/hidden-basic-auth/" +  username +  "/" + password;
+//    std::string url = "https://httpbin.org/digest-auth/auth/" +  username +  "/" + password;
+
+    std::string url = "http://requestb.in/nwmp0snw";
+
+
 
     Poco::URI uri(url);
 
-    ofx::HTTP::Client::GetRequest get(uri);
+    HTTP::Client::PostRequest get(uri);
 
+    get.addCookie("pinkcookie");
 
-    context->getCredentialStoreRef().setCredentials(ofx::HTTP::AuthScope(get.getURI()),
-                                                    ofx::HTTP::Credentials("tester","testing"));
+    get.addHeader("header","beader");
 
-    ofx::HTTP::Client::ResponseStream::SharedPtr response = ofx::HTTP::Client::ResponseStream::createResponseStream(get, context);
+//    HTTP::AuthScope scope(uri.getScheme(),
+//                          uri.getHost(),
+//                          uri.getPort(),
+//                          "me@kennethreitz.com",
+//                          HTTP::DIGEST);
+//
+//    context->getCredentialStoreRef().setCredentials(scope,
+//                                                    HTTP::Credentials(username,password));
 
+    HTTP::Client::ResponseStream::SharedPtr response = HTTP::Client::ResponseStream::createResponseStream(get, context);
 
-    if(!response->hasException()) {
+    if(!response->hasException())
+    {
         Poco::StreamCopier::copyStream(response->getResponseStreamRef(), cout);
+        cout << endl;
     } else {
         cout << response->getException()->message() << endl;
     }
+
+
+//    url = "http://httpbin.org/hidden-basic-auth/" +  username +  "/" + password;
+//
+//    uri = Poco::URI(url);
+//
+//    get = ofx::HTTP::Client::GetRequest(uri);
+//
+//    context->getCredentialStoreRef().setCredentials(ofx::HTTP::AuthScope(get.getURI()),
+//                                                    ofx::HTTP::Credentials(username,password));
+//
+//    response = ofx::HTTP::Client::ResponseStream::createResponseStream(get, context);
+//
+//    if(!response->hasException()) {
+//        Poco::StreamCopier::copyStream(response->getResponseStreamRef(), cout);
+//    } else {
+//        cout << response->getException()->message() << endl;
+//    }
+
+
+//    url = "http://httpbin.org/digest-auth/" +  username +  "/" + password;
+//
+//    uri = Poco::URI(url);
+//
+//    get = ofx::HTTP::Client::GetRequest(uri);
+//
+//    context->getCredentialStoreRef().setCredentials(ofx::HTTP::AuthScope(get.getURI()),
+//                                                    ofx::HTTP::Credentials(username,password));
+//
+//    response = ofx::HTTP::Client::ResponseStream::createResponseStream(get, context);
+//
+//    if(!response->hasException()) {
+//        Poco::StreamCopier::copyStream(response->getResponseStreamRef(), cout);
+//    } else {
+//        cout << response->getException()->message() << endl;
+//    }
+
 }
 
 //------------------------------------------------------------------------------
@@ -107,3 +166,59 @@ void ofApp::gotMessage(ofMessage msg)
 void ofApp::dragEvent(ofDragInfo dragInfo)
 {
 }
+
+//------------------------------------------------------------------------------
+void ofApp::onServerVerificationError(Poco::Net::VerificationErrorArgs& args)
+{
+    ofLogVerbose("ofApp::onServerVerificationError") << args.errorMessage();
+
+    // if you want to proceed, you should allow your user to inspect
+    // the certificate and set:
+    //     args.setIgnoreError(true);
+    // if they approve
+}
+
+//------------------------------------------------------------------------------
+void ofApp::onClientVerificationError(Poco::Net::VerificationErrorArgs& args)
+{
+    ofLogVerbose("ofApp::onClientVerificationError") << args.errorMessage();
+
+    std::stringstream ss;
+
+    ss << "Error: " << args.errorMessage() << " #" << args.errorNumber() << " depth: " << args.errorDepth() << std::endl;
+
+    ss << "Certificate: " << std::endl;
+
+    ss << "Issued By: " << args.certificate().issuerName() << std::endl;
+    ss << "Subject Name: " << args.certificate().issuerName() << std::endl;
+    ss << "Common Name: " << args.certificate().issuerName() << std::endl;
+
+    Poco::DateTime ldtValidFrom = args.certificate().validFrom();
+    Poco::DateTime ldtExpiresOn = args.certificate().expiresOn();
+
+    ss << "Valid From: " << Poco::DateTimeFormatter::format(ldtValidFrom, "%dd %H:%M:%S.%i") << std::endl;
+    ss << "Expires On: " << Poco::DateTimeFormatter::format(ldtExpiresOn, "%dd %H:%M:%S.%i") << std::endl;
+
+    ofLogVerbose("ofApp::onServerVerificationError") << ss.str();
+
+    args.setIgnoreError(true);
+
+    // if you want to proceed, you should allow your user to inspect
+    // the certificate and set:
+    //     args.setIgnoreError(true);
+    // if they approve
+
+    
+}
+
+//------------------------------------------------------------------------------
+void ofApp::onPrivateKeyPassphraseRequired(std::string& args)
+{
+    ofLogVerbose("ofApp::onPrivateKeyPassphraseRequired") << args;
+
+    // if you want to proceed, you should allow your user set the
+    // the certificate and set:
+    //     args.setIgnoreError(true);
+    // if they approve
+}
+

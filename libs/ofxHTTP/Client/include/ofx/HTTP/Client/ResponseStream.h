@@ -32,8 +32,11 @@
 #include "Poco/Exception.h"
 #include "Poco/NullStream.h"
 //#include "Poco/Net/HTTPCookie.h"
+#include "Poco/Net/HTTPClientSession.h"
+#include "Poco/Net/HTTPSClientSession.h"
 #include "Poco/Net/HTTPResponse.h"
 #include "Poco/Net/HTTPIOStream.h"
+#include "ofx/SSLManager.h"
 #include "ofx/HTTP/Client/BaseRequest.h"
 #include "ofx/HTTP/Client/Context.h"
 #include "ofx/HTTP/StreamUtils.h"
@@ -67,7 +70,7 @@ public:
     Poco::Exception* getException() const;
 
 
-    static SharedPtr createResponseStream(const BaseRequest& request,
+    static SharedPtr createResponseStream(BaseRequest& request,
                                           Context::SharedPtr context);
 
 protected:

@@ -30,6 +30,8 @@
 #include "ofxHTTP.h"
 
 
+using namespace ofx;
+
 
 class ofApp: public ofBaseApp
 {
@@ -48,6 +50,8 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
+    void onServerVerificationError(Poco::Net::VerificationErrorArgs& args);
+    void onClientVerificationError(Poco::Net::VerificationErrorArgs& args);
+    void onPrivateKeyPassphraseRequired(std::string& args);
 
-    
 };

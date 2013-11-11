@@ -47,7 +47,7 @@ namespace Client {
 class ResponseStream;  // N.B. forward declaration needed for sub-namespace
                        // to befriend a class in a parent namespace
 
-class BaseRequest
+class BaseRequest: public Poco::Net::HTTPRequest
 {
 public:
     BaseRequest(const std::string& httpMethod,
@@ -67,7 +67,7 @@ public:
     // these cookies will replace any matching cookies provided by the client's cookie store
     void addCookie(const std::string& name,
                    const std::string& value = "",
-                   bool bIsValueEscaped = false);
+                   bool isValueEscaped = false);
     void addCookie(const Poco::Net::HTTPCookie& cookie);
     void addCookie(const Cookie& cookie);
     void addCookies(const std::vector<Cookie>& cookies);
@@ -93,7 +93,6 @@ protected:
     virtual void prepareRequest(Poco::Net::HTTPRequest& request) const = 0;
     virtual void sendRequestBody(std::ostream& requestStream) const;
 
-
     std::string _httpMethod;
     std::string _httpVersion;
 
@@ -103,7 +102,6 @@ protected:
     
     Poco::Net::NameValueCollection _form;
     Poco::Net::NameValueCollection _headers;
-
 
     friend class ResponseStream;
     
