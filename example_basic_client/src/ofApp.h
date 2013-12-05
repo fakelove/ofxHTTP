@@ -48,6 +48,6 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
-
+    ofx::HTTP::Client::ResponseStream::SharedPtr response;
     
 };

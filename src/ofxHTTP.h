@@ -12,3 +12,5 @@
 #include "ofx/HTTP/Client/BaseRequest.h"
 #include "ofx/HTTP/Client/Context.h"
 #include "ofx/HTTP/Client/GetRequest.h"
+#include "ofx/HTTP/Client/PostRequest.h"
+#include "ofx/HTTP/Client/PutRequest.h"

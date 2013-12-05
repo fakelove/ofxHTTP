@@ -50,27 +50,27 @@ namespace HTTP {
 namespace Client {
 
 
-//class BaseClient
-//{
-//public:
-//    typedef std::shared_ptr<BaseClient> SharedPtr;
-//    typedef std::weak_ptr<BaseClient>   WeakPtr;
+class BaseClient
+{
+public:
+    typedef std::shared_ptr<BaseClient> SharedPtr;
+    typedef std::weak_ptr<BaseClient>   WeakPtr;
+
+protected:
+    static ResponseStream::SharedPtr openResponseStream(const BaseRequest& request, Context::SharedPtr context);
+        
+//    Poco::Thread _syncThread; // thread for executing syncronous calls
+//                              // must always be immediately joined
+
+//    Context::SharedPtr _context;
 //
-//protected:
-//    static ResponseStream::SharedPtr openResponseStream(const BaseRequest& request, Context::SharedPtr context);
-//        
-////    Poco::Thread _syncThread; // thread for executing syncronous calls
-////                              // must always be immediately joined
-//
-////    Context::SharedPtr _context;
-////
-////    Poco::ThreadPool& _threadPoolRef; // thread pool for executing asynchronous calls
-//
-//
-////    ofThreadErrorHandler errorHandler;
-////    ErrorHandler* previousErrorHandler;
-//    
-//};
+//    Poco::ThreadPool& _threadPoolRef; // thread pool for executing asynchronous calls
+
+
+//    ofThreadErrorHandler errorHandler;
+//    ErrorHandler* previousErrorHandler;
+    
+};
 
 
 } } } // namespace ofx::HTTP::Client

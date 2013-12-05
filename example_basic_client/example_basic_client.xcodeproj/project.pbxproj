@@ -64,6 +64,8 @@
 		E7E077E515D3B63C0020DFD4 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E415D3B63C0020DFD4 /* CoreVideo.framework */; };
 		E7E077E815D3B6510020DFD4 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E715D3B6510020DFD4 /* QTKit.framework */; };
 		E7F985F815E0DEA3003869B5 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7F985F515E0DE99003869B5 /* Accelerate.framework */; };
+		F3A2FF2C185118EE00C2DC46 /* WebSocketsClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F3A2FF2A185118EE00C2DC46 /* WebSocketsClient.cpp */; };
+		F3A2FF2F18511A3C00C2DC46 /* BaseClientSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F3A2FF2D18511A3C00C2DC46 /* BaseClientSettings.cpp */; };
 		FD5CD4C6182AE5CF0032D108 /* ResponseStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD5CD4C5182AE5CF0032D108 /* ResponseStream.cpp */; };
 		ae32f1807796b1050e082651a5fbf40d /* json_value.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0f867b04bf36a560c2493c097d84756e /* json_value.cpp */; };
 		b4158ae5cf0690b603acd9fa09fa88eb /* WebSocketFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2e044cefc76074177747094930150048 /* WebSocketFrame.cpp */; };
@@ -223,6 +225,9 @@
 		E7E077E415D3B63C0020DFD4 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
 		E7E077E715D3B6510020DFD4 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		E7F985F515E0DE99003869B5 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
+		F3A2FF28185118C100C2DC46 /* WebSocketsClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WebSocketsClient.h; path = ../libs/ofxHTTP/Client/include/ofx/HTTP/Client/WebSocketsClient.h; sourceTree = "<group>"; };
+		F3A2FF2A185118EE00C2DC46 /* WebSocketsClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WebSocketsClient.cpp; path = ../libs/ofxHTTP/Client/src/WebSocketsClient.cpp; sourceTree = "<group>"; };
+		F3A2FF2D18511A3C00C2DC46 /* BaseClientSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BaseClientSettings.cpp; path = ../libs/ofxHTTP/Client/src/BaseClientSettings.cpp; sourceTree = "<group>"; };
 		FD5CD4C5182AE5CF0032D108 /* ResponseStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ResponseStream.cpp; path = ../libs/ofxHTTP/Client/src/ResponseStream.cpp; sourceTree = "<group>"; };
 		FD5CD4C7182AE5DC0032D108 /* ResponseStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ResponseStream.h; path = ../libs/ofxHTTP/Client/include/ofx/HTTP/Client/ResponseStream.h; sourceTree = "<group>"; };
 		a31fb08f6660ce0dc758509eca7313e4 /* MediaTypeMap.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = MediaTypeMap.cpp; path = ../../../addons/ofxMediaType/libs/ofxMediaType/src/MediaTypeMap.cpp; sourceTree = SOURCE_ROOT; };
@@ -407,6 +412,8 @@
 				5ac4470b0b1dd3707acbf8dfd50787e9 /* ProxySettings.cpp */,
 				f6faf1d3cb42c3a1288df427a73b592e /* PutRequest.cpp */,
 				8030d05c94b7faa854d03b612f01460f /* SessionSettings.cpp */,
+				F3A2FF2A185118EE00C2DC46 /* WebSocketsClient.cpp */,
+				F3A2FF2D18511A3C00C2DC46 /* BaseClientSettings.cpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -751,6 +758,7 @@
 				f74aa8c5da4eca69368570bc4d756651 /* ProxySettings.h */,
 				4104079db58b501f995b74f03056e6a9 /* PutRequest.h */,
 				8f8e77837d5e71e8eb167ef69a6e7279 /* SessionSettings.h */,
+				F3A2FF28185118C100C2DC46 /* WebSocketsClient.h */,
 			);
 			name = Client;
 			sourceTree = "<group>";
@@ -1191,10 +1199,12 @@
 				c702db79d820e01459b62e241d3d1d53 /* BaseServerBasicAuthenticationManager.cpp in Sources */,
 				ddcf04b30aa586652e56cb96ede7dc74 /* BaseServerSettings.cpp in Sources */,
 				8f8a68b3317e956f024c2f8358609a6f /* BaseWebSocketSessionManager.cpp in Sources */,
+				F3A2FF2F18511A3C00C2DC46 /* BaseClientSettings.cpp in Sources */,
 				bbcf6cc30bdd2d19914a32beffb6ab2b /* BasicWebSocketServer.cpp in Sources */,
 				d84eb0d4e9cd6fffb6d68218a5e929a4 /* WebSocketConnection.cpp in Sources */,
 				b4158ae5cf0690b603acd9fa09fa88eb /* WebSocketFrame.cpp in Sources */,
 				9266ac909a7436467ccd49961b2b0810 /* WebSocketRoute.cpp in Sources */,
+				F3A2FF2C185118EE00C2DC46 /* WebSocketsClient.cpp in Sources */,
 				782c5bdf3e6ddddef56ec398225f4ddd /* WebSocketRouteHandler.cpp in Sources */,
 				368227a94a20c5834035fbc3861d087b /* WebSocketRouteSettings.cpp in Sources */,
 				238f366723ba7af1458de0758e6ec5ae /* AuthScope.cpp in Sources */,
