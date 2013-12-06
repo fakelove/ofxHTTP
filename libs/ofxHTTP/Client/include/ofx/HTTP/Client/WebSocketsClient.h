@@ -8,45 +8,48 @@
 
 #pragma once
 
-#include "ofx/HTTP/Client/BaseClient.h"
-#include "ofx/HTTP/Client/BaseClientSettings.h"
-#include "ofx/HTTP/Server/WebSocket/WebSocketRoute.h"
-#include "ofx/HTTP/Server/WebSocket/WebSocketRouteSettings.h"
-
+#include "ofx/HTTP/Client/WebSocketsClientImp.h"
+#include "ofx/HTTP/Client/EventHandler.h"
+#include "ofx/HTTP/Client/EventRegistry.h"
 
 namespace ofx {
     namespace HTTP {
         namespace Client {
+
             
-            class BasicWebSocketClientSettings:
-            public WebSocketRouteSettings,
-            public BaseClientSettings
+            class WebSocketsClient
             {
-            };
-            
-            
-            class WebSocketsClient: public BaseClient
-            {
-            public:
-                typedef std::shared_ptr<WebSocketsClient> SharedPtr;
-                typedef std::weak_ptr<WebSocketsClient>   WeakPtr;
-                typedef BasicWebSocketClientSettings          Settings;
-                
-                WebSocketsClient(const Settings& settings = Settings());
-                
-                WebSocketRoute::SharedPtr getWebSocketRoute();
-                
-                // this method is a hack replacement for std::make_shared<BasicServer>(...);
-                static SharedPtr makeShared(const Settings& settings = Settings())
-                {
-                    return SharedPtr(new WebSocketsClient(settings));
-                }
             private:
-                WebSocketRoute::SharedPtr _webSocketRoute;
+                ~WebSocketsClient();
                 
+                WebSocketsClientImp *_socket;
+                
+                std::string _uri;
+                std::string _endpoint;
+                
+//                NotificationCenter* _nCenter;
+                
+                EventRegistry *_registry;
+                EventHandler *_sioHandler;
+                
+            public:
+                WebSocketsClient(std::string uri, std::string endpoint, WebSocketsClientImp *impl);
+                
+                bool init();
+                
+                static WebSocketsClient* connect(std::string uri);
+                void disconnect();
+                void send(std::string s);
+                void emit(std::string eventname, std::string args);
+                std::string getUri();
+ //               NotificationCenter* getNCenter();
+                
+                typedef void (EventTarget::*callback)(const void*, Object::Ptr&);
+                
+                void on(const char *name, SIOEventTarget *target, callback c);
+                
+                void fireEvent(const char * name, Object::Ptr args);
             };
-            
-            
         }
     }
-} // namespace ofx::HTTP
+}

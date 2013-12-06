@@ -66,6 +66,12 @@
 		E7F985F815E0DEA3003869B5 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7F985F515E0DE99003869B5 /* Accelerate.framework */; };
 		F3A2FF2C185118EE00C2DC46 /* WebSocketsClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F3A2FF2A185118EE00C2DC46 /* WebSocketsClient.cpp */; };
 		F3A2FF2F18511A3C00C2DC46 /* BaseClientSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F3A2FF2D18511A3C00C2DC46 /* BaseClientSettings.cpp */; };
+		F3A2FF3C18512CFC00C2DC46 /* ClientNotifications.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F3A2FF3818512CFC00C2DC46 /* ClientNotifications.cpp */; };
+		F3A2FF3D18512CFC00C2DC46 /* EventHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F3A2FF3918512CFC00C2DC46 /* EventHandler.cpp */; };
+		F3A2FF3E18512CFC00C2DC46 /* ClientEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F3A2FF3A18512CFC00C2DC46 /* ClientEvent.cpp */; };
+		F3A2FF3F18512CFC00C2DC46 /* ClientRegistry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F3A2FF3B18512CFC00C2DC46 /* ClientRegistry.cpp */; };
+		F3A2FF4218512D3900C2DC46 /* WebSocketsClientImp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F3A2FF4118512D3900C2DC46 /* WebSocketsClientImp.cpp */; };
+		F3A2FF4818512EA100C2DC46 /* EventRegistry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F3A2FF4618512EA100C2DC46 /* EventRegistry.cpp */; };
 		FD5CD4C6182AE5CF0032D108 /* ResponseStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD5CD4C5182AE5CF0032D108 /* ResponseStream.cpp */; };
 		ae32f1807796b1050e082651a5fbf40d /* json_value.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0f867b04bf36a560c2493c097d84756e /* json_value.cpp */; };
 		b4158ae5cf0690b603acd9fa09fa88eb /* WebSocketFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2e044cefc76074177747094930150048 /* WebSocketFrame.cpp */; };
@@ -228,6 +234,19 @@
 		F3A2FF28185118C100C2DC46 /* WebSocketsClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WebSocketsClient.h; path = ../libs/ofxHTTP/Client/include/ofx/HTTP/Client/WebSocketsClient.h; sourceTree = "<group>"; };
 		F3A2FF2A185118EE00C2DC46 /* WebSocketsClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WebSocketsClient.cpp; path = ../libs/ofxHTTP/Client/src/WebSocketsClient.cpp; sourceTree = "<group>"; };
 		F3A2FF2D18511A3C00C2DC46 /* BaseClientSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BaseClientSettings.cpp; path = ../libs/ofxHTTP/Client/src/BaseClientSettings.cpp; sourceTree = "<group>"; };
+		F3A2FF3418512CEA00C2DC46 /* ClientNotifications.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ClientNotifications.h; path = ../libs/ofxHTTP/Client/include/ofx/HTTP/Client/ClientNotifications.h; sourceTree = "<group>"; };
+		F3A2FF3518512CEA00C2DC46 /* EventHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventHandler.h; path = ../libs/ofxHTTP/Client/include/ofx/HTTP/Client/EventHandler.h; sourceTree = "<group>"; };
+		F3A2FF3618512CEA00C2DC46 /* ClientEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ClientEvent.h; path = ../libs/ofxHTTP/Client/include/ofx/HTTP/Client/ClientEvent.h; sourceTree = "<group>"; };
+		F3A2FF3718512CEA00C2DC46 /* ClientRegistry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ClientRegistry.h; path = ../libs/ofxHTTP/Client/include/ofx/HTTP/Client/ClientRegistry.h; sourceTree = "<group>"; };
+		F3A2FF3818512CFC00C2DC46 /* ClientNotifications.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ClientNotifications.cpp; path = ../libs/ofxHTTP/Client/src/ClientNotifications.cpp; sourceTree = "<group>"; };
+		F3A2FF3918512CFC00C2DC46 /* EventHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventHandler.cpp; path = ../libs/ofxHTTP/Client/src/EventHandler.cpp; sourceTree = "<group>"; };
+		F3A2FF3A18512CFC00C2DC46 /* ClientEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ClientEvent.cpp; path = ../libs/ofxHTTP/Client/src/ClientEvent.cpp; sourceTree = "<group>"; };
+		F3A2FF3B18512CFC00C2DC46 /* ClientRegistry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ClientRegistry.cpp; path = ../libs/ofxHTTP/Client/src/ClientRegistry.cpp; sourceTree = "<group>"; };
+		F3A2FF4018512D2700C2DC46 /* WebSocketsClientImp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WebSocketsClientImp.h; path = ../libs/ofxHTTP/Client/include/ofx/HTTP/Client/WebSocketsClientImp.h; sourceTree = "<group>"; };
+		F3A2FF4118512D3900C2DC46 /* WebSocketsClientImp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WebSocketsClientImp.cpp; path = ../libs/ofxHTTP/Client/src/WebSocketsClientImp.cpp; sourceTree = "<group>"; };
+		F3A2FF4318512E9000C2DC46 /* EventTarget.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventTarget.h; path = ../libs/ofxHTTP/Client/include/ofx/HTTP/Client/EventTarget.h; sourceTree = "<group>"; };
+		F3A2FF4418512E9000C2DC46 /* EventRegistry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventRegistry.h; path = ../libs/ofxHTTP/Client/include/ofx/HTTP/Client/EventRegistry.h; sourceTree = "<group>"; };
+		F3A2FF4618512EA100C2DC46 /* EventRegistry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventRegistry.cpp; path = ../libs/ofxHTTP/Client/src/EventRegistry.cpp; sourceTree = "<group>"; };
 		FD5CD4C5182AE5CF0032D108 /* ResponseStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ResponseStream.cpp; path = ../libs/ofxHTTP/Client/src/ResponseStream.cpp; sourceTree = "<group>"; };
 		FD5CD4C7182AE5DC0032D108 /* ResponseStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ResponseStream.h; path = ../libs/ofxHTTP/Client/include/ofx/HTTP/Client/ResponseStream.h; sourceTree = "<group>"; };
 		a31fb08f6660ce0dc758509eca7313e4 /* MediaTypeMap.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = MediaTypeMap.cpp; path = ../../../addons/ofxMediaType/libs/ofxMediaType/src/MediaTypeMap.cpp; sourceTree = SOURCE_ROOT; };
@@ -402,6 +421,12 @@
 		3673092f36e6d9f7d1c04bc62f29fd6a /* src */ = {
 			isa = PBXGroup;
 			children = (
+				F3A2FF4618512EA100C2DC46 /* EventRegistry.cpp */,
+				F3A2FF4118512D3900C2DC46 /* WebSocketsClientImp.cpp */,
+				F3A2FF3818512CFC00C2DC46 /* ClientNotifications.cpp */,
+				F3A2FF3918512CFC00C2DC46 /* EventHandler.cpp */,
+				F3A2FF3A18512CFC00C2DC46 /* ClientEvent.cpp */,
+				F3A2FF3B18512CFC00C2DC46 /* ClientRegistry.cpp */,
 				ba34a45449704a1c6eb4719aefabde38 /* BaseRequest.cpp */,
 				4c587e6a21ad239e7e50b1a63218dd6f /* BaseClient.cpp */,
 				815ecb66c7cb083ab7b921fdfc92e98c /* Context.cpp */,
@@ -746,6 +771,13 @@
 		a1a9377aa7e43a49ffea2bd2d2e24277 /* Client */ = {
 			isa = PBXGroup;
 			children = (
+				F3A2FF4018512D2700C2DC46 /* WebSocketsClientImp.h */,
+				F3A2FF4318512E9000C2DC46 /* EventTarget.h */,
+				F3A2FF4418512E9000C2DC46 /* EventRegistry.h */,
+				F3A2FF3418512CEA00C2DC46 /* ClientNotifications.h */,
+				F3A2FF3518512CEA00C2DC46 /* EventHandler.h */,
+				F3A2FF3618512CEA00C2DC46 /* ClientEvent.h */,
+				F3A2FF3718512CEA00C2DC46 /* ClientRegistry.h */,
 				6e39355b80edab8f082ab504b4ea798e /* BaseClient.h */,
 				8b42d21206d5784eb71c5abdd215eef2 /* BaseRequest.h */,
 				5b4a0f483f81cc4238ddb8d65926dd05 /* Context.h */,
@@ -1169,6 +1201,7 @@
 				E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */,
 				19e3ee6663601884fcbd9ea28455d449 /* ofxHTTPRequestExecutor.cpp in Sources */,
 				dc37046a12c7f635654be8288df8c11c /* BaseRequest.cpp in Sources */,
+				F3A2FF4218512D3900C2DC46 /* WebSocketsClientImp.cpp in Sources */,
 				7515c82f5a14fcab8047538ff7e5c0cf /* BaseClient.cpp in Sources */,
 				7c278827ea9e88f4987cf00f3331ca5a /* Context.cpp in Sources */,
 				dec6d87e831c3afba4ee6e1085a027f6 /* Cookie.cpp in Sources */,
@@ -1176,12 +1209,14 @@
 				7d76d53599dd0861741d659dca036ac4 /* GetRequest.cpp in Sources */,
 				693e8454a1119351bda1ee85ec1762c8 /* PostRequest.cpp in Sources */,
 				ccf6f5cf1be4e8180ae36b7417be45c5 /* ProxySettings.cpp in Sources */,
+				F3A2FF3E18512CFC00C2DC46 /* ClientEvent.cpp in Sources */,
 				2e833c717e75a5a328d1cca4b4ecb79d /* PutRequest.cpp in Sources */,
 				4dfc16696d70d2e63b933cb53fb4e1b8 /* SessionSettings.cpp in Sources */,
 				64a924fd0039aac46414055846d90a33 /* BasicFileSystemServer.cpp in Sources */,
 				1b6065a2e10033d47df60c709ed99a34 /* FileSystemRoute.cpp in Sources */,
 				4f212bddacb31b1b640f0c4159339cca /* FileSystemRouteHandler.cpp in Sources */,
 				d267c6fa38c776bf44f7deac30c74d00 /* FileSystemRouteSettings.cpp in Sources */,
+				F3A2FF4818512EA100C2DC46 /* EventRegistry.cpp in Sources */,
 				fe9dfe05a6f58da26d63896db2da365b /* BasicFileUploadServer.cpp in Sources */,
 				1276d96dd9c9f6ea2d4c1435f8783a05 /* FileUploadRoute.cpp in Sources */,
 				5c3d7ea7b8a0058518adba60fc77e905 /* FileUploadRouteHandler.cpp in Sources */,
@@ -1197,6 +1232,7 @@
 				745635f8cfbf78e65b1c75ac9a415ee8 /* BaseRouteHandler.cpp in Sources */,
 				9aac8610fe3d438783a824c918d8dc4c /* BaseRouteSettings.cpp in Sources */,
 				c702db79d820e01459b62e241d3d1d53 /* BaseServerBasicAuthenticationManager.cpp in Sources */,
+				F3A2FF3D18512CFC00C2DC46 /* EventHandler.cpp in Sources */,
 				ddcf04b30aa586652e56cb96ede7dc74 /* BaseServerSettings.cpp in Sources */,
 				8f8a68b3317e956f024c2f8358609a6f /* BaseWebSocketSessionManager.cpp in Sources */,
 				F3A2FF2F18511A3C00C2DC46 /* BaseClientSettings.cpp in Sources */,
@@ -1214,9 +1250,11 @@
 				1c864f9f12bdcff704a6733cd7f8731a /* HeaderUtils.cpp in Sources */,
 				10b158b194807374a26775ac3dff5ece /* ProgressMonitor.cpp in Sources */,
 				7164401ad5c77aa943424e00f73bc4f7 /* StreamUtils.cpp in Sources */,
+				F3A2FF3F18512CFC00C2DC46 /* ClientRegistry.cpp in Sources */,
 				bedfee7400c58ea4e412b757bd605a7b /* ofxJSONElement.cpp in Sources */,
 				7ced9fcc5bf62c4915c8d09f62ad86a7 /* json_reader.cpp in Sources */,
 				ae32f1807796b1050e082651a5fbf40d /* json_value.cpp in Sources */,
+				F3A2FF3C18512CFC00C2DC46 /* ClientNotifications.cpp in Sources */,
 				9b06c5cae570b630a97e51c38887e84b /* json_writer.cpp in Sources */,
 				FD5CD4C6182AE5CF0032D108 /* ResponseStream.cpp in Sources */,
 				3ffc0de0edbfdeb37b18f82434a6fadb /* MediaTypeUtils.cpp in Sources */,
