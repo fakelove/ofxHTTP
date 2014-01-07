@@ -31,13 +31,12 @@ namespace HTTP {
 
 
 const std::string BaseServerSettings::DEFAULT_HOST = "127.0.0.1";
-const unsigned short BaseServerSettings::DEFAULT_PORT = 8080;
+const uint16_t BaseServerSettings::DEFAULT_PORT = 8080;
 const bool BaseServerSettings::DEFAULT_USE_SSL = false;
 
 
-//------------------------------------------------------------------------------
 BaseServerSettings::BaseServerSettings(const std::string& host,
-                                       const unsigned short port,
+                                       const uint16_t port,
                                        bool useSSL):
     _host(host),
     _port(port),
@@ -45,48 +44,48 @@ BaseServerSettings::BaseServerSettings(const std::string& host,
 {
 }
 
-//------------------------------------------------------------------------------
+
 BaseServerSettings::~BaseServerSettings()
 {
 }
 
-//------------------------------------------------------------------------------
+
 void BaseServerSettings::setHost(const std::string& host)
 {
     _host = host;
 }
 
-//------------------------------------------------------------------------------
+
 std::string BaseServerSettings::getHost() const
 {
     return _host;
 }
 
-//------------------------------------------------------------------------------
-void BaseServerSettings::setPort(const unsigned short port)
+
+void BaseServerSettings::setPort(const uint16_t port)
 {
     _port = port;
 }
 
-//------------------------------------------------------------------------------
-unsigned short BaseServerSettings::getPort() const
+
+uint16_t BaseServerSettings::getPort() const
 {
     return _port;
 }
 
-//------------------------------------------------------------------------------
+
 void BaseServerSettings::setUseSSL(bool useSSL)
 {
     _useSSL = useSSL;
 }
 
-//------------------------------------------------------------------------------
+
 bool BaseServerSettings::getUseSSL() const
 {
     return _useSSL;
 }
 
-//------------------------------------------------------------------------------
+
 Poco::URI BaseServerSettings::getURI() const
 {
     Poco::URI uri;

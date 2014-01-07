@@ -98,7 +98,7 @@ ResponseStream::SharedPtr ResponseStream::createResponseStream(BaseRequest& http
 
         while (redirects < sessionSettings.getMaxRedirects())
         {
-            // URI resolvedURI(targetURI);
+            Poco::URI resolvedURI;
             Poco::URI redirectedProxyUri;
             HTTPClientSession* pClientSession = 0;
             bool proxyRedirectRequested = false;
@@ -221,7 +221,7 @@ ResponseStream::SharedPtr ResponseStream::createResponseStream(BaseRequest& http
                 // call back into the request to pull the request data
                 ofLogVerbose("ResponseStream::createResponseStream") << "Preparing request.";
 
-                request.prepareRequest(httpRequest);
+//                httpRequest.prepareRequest(httpRequest);
 
 
                 NameValueCollection::ConstIterator iter = httpRequest.begin();
@@ -234,6 +234,7 @@ ResponseStream::SharedPtr ResponseStream::createResponseStream(BaseRequest& http
                 }
                 cout << "HEADERS-----" << endl;
 
+                cout << "URI: " << httpRequest.getURI().toString() << endl;
 
                 //////////////////////////////////////////////////////////////////
                 /////////////////////// -- SEND REQUEST -- ///////////////////////
@@ -242,7 +243,7 @@ ResponseStream::SharedPtr ResponseStream::createResponseStream(BaseRequest& http
                 std::ostream& requestStream = pClientSession->sendRequest(httpRequest);
 
                 ofLogVerbose("ResponseStream::createResponseStream") << "Sending request body.";
-                request.sendRequestBody(requestStream); // upload, put etc
+                httpRequest.sendRequestBody(requestStream); // upload, put etc
                 //////////////////////////////////////////////////////////////////
                 ///////////////////////// -- RESPONSE -- /////////////////////////
                 //////////////////////////////////////////////////////////////////
@@ -256,14 +257,14 @@ ResponseStream::SharedPtr ResponseStream::createResponseStream(BaseRequest& http
                     httpResponse.getStatus() == HTTPResponse::HTTP_SEE_OTHER           ||
                     httpResponse.getStatus() == HTTPResponse::HTTP_TEMPORARY_REDIRECT)
                 {
-                    uri.resolve(httpResponse.get("Location"));
+                    resolvedURI.resolve(httpResponse.get("Location"));
 
                     ++redirects;
 
                     delete pClientSession;
                     pClientSession = 0;
 
-                    ofLogVerbose("ResponseStream::createResponseStream") << "Redirecting to: " << uri.toString();
+                    ofLogVerbose("ResponseStream::createResponseStream") << "Redirecting to: " << resolvedURI.toString();
 
                 }
                 else if (httpResponse.getStatus() == HTTPResponse::HTTP_OK)
@@ -327,7 +328,7 @@ ResponseStream::SharedPtr ResponseStream::createResponseStream(BaseRequest& http
                                                       new HTTPResponseStream(responseStream,
                                                                              pClientSession),
                                                       new Poco::Exception(httpResponse.getReason(),
-                                                                          uri.toString()));
+                                                                          resolvedURI.toString()));
                 }
 
             }

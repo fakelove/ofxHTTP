@@ -31,30 +31,30 @@ namespace HTTP {
 namespace Client {
 
     
-//------------------------------------------------------------------------------
+
 PostRequest::PostRequest(const Poco::URI& uri):
     BaseRequest(Poco::Net::HTTPRequest::HTTP_POST,uri)
 {
 }
 
-//------------------------------------------------------------------------------
+
 PostRequest::PostRequest(const Poco::URI& uri, const std::string& httpVersion):
     BaseRequest(Poco::Net::HTTPRequest::HTTP_POST,uri,httpVersion)
 {
 }
 
-//------------------------------------------------------------------------------
+
 PostRequest::~PostRequest()
 {
 }
 
-//------------------------------------------------------------------------------
+
 void PostRequest::addFormFile(const std::string& fieldName, const std::string& filePath)
 {
     _formFiles.add(fieldName, ofToDataPath(filePath));
 }
 
-//------------------------------------------------------------------------------
+
 void PostRequest::addFormFiles(const Poco::Net::NameValueCollection& nameValueMap)
 {
     Poco::Net::NameValueCollection::ConstIterator iter = nameValueMap.begin();
@@ -66,7 +66,7 @@ void PostRequest::addFormFiles(const Poco::Net::NameValueCollection& nameValueMa
     }
 }
 
-//------------------------------------------------------------------------------
+
 void PostRequest::addFormFiles(const std::map<std::string,std::string>& nameValueMap)
 {
     std::map<std::string,std::string>::const_iterator iter = nameValueMap.begin();
@@ -78,7 +78,7 @@ void PostRequest::addFormFiles(const std::map<std::string,std::string>& nameValu
     }
 }
 
-//------------------------------------------------------------------------------
+
 void PostRequest::addFormFiles(const multimap<string,string>&  nameValueMap)
 {
     std::multimap<std::string,std::string>::const_iterator iter = nameValueMap.begin();
@@ -90,25 +90,25 @@ void PostRequest::addFormFiles(const multimap<string,string>&  nameValueMap)
     }
 }
 
-//------------------------------------------------------------------------------
+
 bool PostRequest::hasFormFiles() const
 {
     return !_formFiles.empty();
 }
 
-//------------------------------------------------------------------------------
+
 void PostRequest::clearFormFiles()
 {
     _formFiles.clear();
 }
 
-//------------------------------------------------------------------------------
+
 const Poco::Net::NameValueCollection& PostRequest::getFormFiles() const
 {
     return _formFiles;
 }
 
-//------------------------------------------------------------------------------
+
 void PostRequest::prepareRequest(Poco::Net::HTTPRequest& request) const
 {
     // TODO: this is not the right place to do this.

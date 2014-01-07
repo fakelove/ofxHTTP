@@ -31,18 +31,17 @@ namespace HTTP {
 namespace Client {
 
     
-//------------------------------------------------------------------------------
 Context::Context()
 {
 }
 
-//------------------------------------------------------------------------------
+
 Context::Context(SessionSettings& sessionSettings):
     _sessionSettings(sessionSettings)
 {
 }
 
-//------------------------------------------------------------------------------
+
 Context::Context(SessionSettings& sessionSettings,
                  CredentialStore& credentialStore):
     _sessionSettings(sessionSettings),
@@ -50,7 +49,7 @@ Context::Context(SessionSettings& sessionSettings,
 {
 }
 
-//------------------------------------------------------------------------------
+
 Context::Context(SessionSettings& sessionSettings,
                  CredentialStore& credentialStore,
                  CookieStore& cookieStore):
@@ -60,87 +59,87 @@ Context::Context(SessionSettings& sessionSettings,
 {
 }
 
-//------------------------------------------------------------------------------
-Context::Context(Context& that)
+
+Context::Context(Context& other)
 {
-    _sessionSettings = that._sessionSettings;
-    _credentialStore = that._credentialStore;
-    _cookieStore     = that._cookieStore;
+    _sessionSettings = other._sessionSettings;
+    _credentialStore = other._credentialStore;
+    _cookieStore     = other._cookieStore;
 }
 
-//------------------------------------------------------------------------------
-Context& Context::operator = (Context& that)
+
+Context& Context::operator = (Context& other)
 {
-    _sessionSettings = that._sessionSettings;
-    _credentialStore = that._credentialStore;
-    _cookieStore     = that._cookieStore;
+    _sessionSettings = other._sessionSettings;
+    _credentialStore = other._credentialStore;
+    _cookieStore     = other._cookieStore;
    return *this;
 }
 
-//------------------------------------------------------------------------------
+
 Context::~Context()
 {
 }
 
-//------------------------------------------------------------------------------
+
 SessionSettings Context::getSessionSettings()
 {
     return _sessionSettings;
 }
 
-//------------------------------------------------------------------------------
+
 SessionSettings& Context::getSessionSettingsRef()
 {
     return _sessionSettings;
 }
 
-//------------------------------------------------------------------------------
+
 CookieStore Context::getCookieStore()
 {
     return _cookieStore;
 }
 
-//------------------------------------------------------------------------------
+
 CookieStore& Context::getCookieStoreRef()
 {
     return _cookieStore;
 }
 
-////------------------------------------------------------------------------------
+//
 //ClientContext::SharedPtr ClientContext::defaultClientContext() {
 //    static ClientContext::SharedPtr DefaultClientContext = ClientContext::SharedPtr(new ClientContext());
 //
 //    return DefaultClientContext;
 //}
 
-//------------------------------------------------------------------------------
+
 CredentialStore Context::getCredentialStore()
 {
     return _credentialStore;
 }
 
-//------------------------------------------------------------------------------
+
 CredentialStore& Context::getCredentialStoreRef()
 {
     return _credentialStore;
 }
 
-////------------------------------------------------------------------------------
+//
 //bool ClientContext::canAuthenticate(HTTPRequest& request) {
 //    
 //}
 //
-////------------------------------------------------------------------------------
+//
 //bool ClientContext::canAuthenticate(HTTPRequest& request, HTTPResponse& response) {
 //    
 //}
 //
-////------------------------------------------------------------------------------
+//
 //bool ClientContext::authenticate(HTTPRequest& request) {
 //    
 //}
 //
-////------------------------------------------------------------------------------
+//
 //bool ClientContext::authenticate(HTTPRequest& request, HTTPResponse& response) {
 //
 //}

@@ -28,9 +28,8 @@
 
 namespace ofx {
 namespace HTTP {
-        
 
-//------------------------------------------------------------------------------
+
 AuthScope::AuthScope():
     _hasScheme(false),
     _scheme(""),
@@ -45,7 +44,7 @@ AuthScope::AuthScope():
 {
 }
 
-//------------------------------------------------------------------------------
+
 AuthScope::AuthScope(const std::string& host):
     _hasScheme(false),
     _scheme(""),
@@ -60,7 +59,7 @@ AuthScope::AuthScope(const std::string& host):
 {
 }
     
-//------------------------------------------------------------------------------
+
 AuthScope::AuthScope(const std::string& host, uint16_t port):
     _hasScheme(false),
     _scheme(""),
@@ -75,7 +74,7 @@ AuthScope::AuthScope(const std::string& host, uint16_t port):
 {
 }
 
-    //------------------------------------------------------------------------------
+    
 AuthScope::AuthScope(const std::string& host, AuthenticationType authType):
     _hasScheme(false),
     _scheme(""),
@@ -90,7 +89,7 @@ AuthScope::AuthScope(const std::string& host, AuthenticationType authType):
 {
 }
 
-//------------------------------------------------------------------------------
+
 AuthScope::AuthScope(const std::string& host,
                      uint16_t port,
                      AuthenticationType authType):
@@ -107,7 +106,7 @@ AuthScope::AuthScope(const std::string& host,
 {
 }
 
-//------------------------------------------------------------------------------
+
 AuthScope::AuthScope(const std::string& scheme,
                      const std::string& host,
                      uint16_t port,
@@ -126,7 +125,7 @@ AuthScope::AuthScope(const std::string& scheme,
 {
 }
 
-//------------------------------------------------------------------------------
+
 AuthScope::AuthScope(const Poco::URI& uri):
     _hasScheme(false),
     _scheme(""),
@@ -139,30 +138,30 @@ AuthScope::AuthScope(const Poco::URI& uri):
     _hasAuthType(false),
     _authType(BASIC)
 {
-    if(!uri.getScheme().empty()) setScheme(uri.getScheme());
-    if(!uri.getHost().empty())   setHost(uri.getHost());
-    if(uri.getPort() > 0)        setPort(uri.getPort());
+    if (!uri.getScheme().empty()) setScheme(uri.getScheme());
+    if (!uri.getHost().empty())   setHost(uri.getHost());
+    if (uri.getPort() > 0)        setPort(uri.getPort());
 
     // realm and auth type cannot be determined from a URI
 }
 
-//------------------------------------------------------------------------------
+
 bool AuthScope::hasScheme() const
 {
     return _hasScheme;
 }
 
-//------------------------------------------------------------------------------
+
 void AuthScope::clearScheme()
 {
     _scheme.clear();
     _hasScheme = false;
 }
 
-//------------------------------------------------------------------------------
+
 void AuthScope::setScheme(const std::string& scheme)
 {
-    if(scheme.empty())
+    if (scheme.empty())
     {
         clearScheme();
     }
@@ -173,29 +172,29 @@ void AuthScope::setScheme(const std::string& scheme)
     }
 }
 
-//------------------------------------------------------------------------------
+
 std::string AuthScope::getScheme() const
 {
     return _scheme;
 }
 
-//------------------------------------------------------------------------------
+
 bool AuthScope::hasHost() const
 {
     return _hasHost;
 }
 
-//------------------------------------------------------------------------------
+
 void AuthScope::clearHost()
 {
     _host.clear();
     _hasHost = false;
 }
 
-//------------------------------------------------------------------------------
+
 void AuthScope::setHost(const std::string& host)
 {
-    if(host.empty())
+    if (host.empty())
     {
         clearHost();
     }
@@ -206,22 +205,22 @@ void AuthScope::setHost(const std::string& host)
     }
 }
 
-//------------------------------------------------------------------------------
+
 std::string AuthScope::getHost() const
 {
     return _host;
 }
 
-//------------------------------------------------------------------------------
+
 bool AuthScope::hasPort() const
 {
     return _hasPort;
 }
 
-//------------------------------------------------------------------------------
+
 void AuthScope::setPort(uint16_t port)
 {
-    if(0 == port)
+    if (0 == port)
     {
         clearPort();
     }
@@ -232,29 +231,29 @@ void AuthScope::setPort(uint16_t port)
     }
 }
 
-//------------------------------------------------------------------------------
+
 void AuthScope::clearPort()
 {
     _port = 0;
     _hasPort = false;
 }
 
-//------------------------------------------------------------------------------
+
 uint16_t AuthScope::getPort() const
 {
     return _port;
 }
 
-//------------------------------------------------------------------------------
+
 bool AuthScope::hasRealm() const
 {
     return _hasRealm;
 }
 
-//------------------------------------------------------------------------------
+
 void AuthScope::setRealm(const std::string& realm)
 {
-    if(realm.empty())
+    if (realm.empty())
     {
         clearRealm();
     }
@@ -265,28 +264,28 @@ void AuthScope::setRealm(const std::string& realm)
     }
 }
 
-//------------------------------------------------------------------------------
+
 void AuthScope::clearRealm() {
     _realm.clear();
     _hasRealm = false;
 }
 
-//------------------------------------------------------------------------------
+
 std::string AuthScope::getRealm() const
 {
     return _realm;
 }
 
-//------------------------------------------------------------------------------
+
 bool AuthScope::hasAuthType() const
 {
     return _hasAuthType;
 }
 
-//------------------------------------------------------------------------------
+
 void AuthScope::setAuthType(AuthenticationType authType)
 {
-    if(NONE == authType)
+    if (NONE == authType)
     {
         clearAuthType();
     }
@@ -297,20 +296,20 @@ void AuthScope::setAuthType(AuthenticationType authType)
     }
 }
 
-//------------------------------------------------------------------------------
+
 void AuthScope::clearAuthType()
 {
     _authType = NONE;
     _hasAuthType = false;
 }
 
-//------------------------------------------------------------------------------
+
 AuthenticationType AuthScope::getAuthType() const
 {
     return _authType;
 }
 
-//------------------------------------------------------------------------------
+
 bool AuthScope::operator == (const AuthScope& scope) const
 {
     return  _hasScheme   == scope._hasScheme    &&
@@ -325,26 +324,26 @@ bool AuthScope::operator == (const AuthScope& scope) const
             _authType      == scope._authType;
 }
 
-//------------------------------------------------------------------------------
+
 int AuthScope::match(const AuthScope& scope) const
 {
     // from org/apache/http/auth/AuthScope.html
     int factor = 0;
     
-    if(_hasAuthType && scope._hasAuthType && _authType == scope._authType)
+    if (_hasAuthType && scope._hasAuthType && _authType == scope._authType)
     {
         factor += 1;
     }
-    else if(_hasAuthType && scope._hasAuthType)
+    else if (_hasAuthType && scope._hasAuthType)
     {
         return -1;
     }
     
-    if(_hasRealm && scope._hasRealm && _realm == scope._realm)
+    if (_hasRealm && scope._hasRealm && _realm == scope._realm)
     {
         factor += 2;
     }
-    else if(_hasRealm && scope._hasRealm)
+    else if (_hasRealm && scope._hasRealm)
     {
         return -1;
     }
@@ -355,16 +354,16 @@ int AuthScope::match(const AuthScope& scope) const
         // why is this more important than host?
         factor += 3;
     }
-    else if(_hasScheme && scope._hasScheme)
+    else if (_hasScheme && scope._hasScheme)
     {
         return -1;
     }
 
-    if(_hasPort && scope._hasPort && _port == scope._port)
+    if (_hasPort && scope._hasPort && _port == scope._port)
     {
         factor += 4;
     }
-    else if(_hasPort && scope._hasPort)
+    else if (_hasPort && scope._hasPort)
     {
         return -1;
     }
@@ -373,7 +372,7 @@ int AuthScope::match(const AuthScope& scope) const
     {
         factor += 8;
     }
-    else if(_hasHost && scope._hasHost)
+    else if (_hasHost && scope._hasHost)
     {
         return -1;
     }
@@ -381,19 +380,19 @@ int AuthScope::match(const AuthScope& scope) const
     return factor;
 }
 
-//------------------------------------------------------------------------------
+
 bool AuthScope::operator != (const AuthScope& scope) const
 {
     return !((*this)==scope);
 }
 
-//------------------------------------------------------------------------------
+
 bool AuthScope::operator < (const AuthScope& scope) const
 {
     return match(scope) < 0;
 }
 
-//------------------------------------------------------------------------------
+
 std::string AuthScope::toString() const
 {
     std::stringstream ss;
@@ -401,7 +400,7 @@ std::string AuthScope::toString() const
     ss << "Scheme: " << (_hasScheme ? getScheme() : "Any");
     ss << " Host: " << (_hasHost ? getHost() : "Any");
     ss << " Port: ";
-    if(_hasPort)
+    if (_hasPort)
     {
         ss << getPort();
     }
@@ -413,9 +412,9 @@ std::string AuthScope::toString() const
     ss << " Realm: " << (_hasRealm ? getRealm() : "Any");
     ss << " AuthType: ";
 
-    if(_hasAuthType)
+    if (_hasAuthType)
     {
-        switch(getAuthType())
+        switch (getAuthType())
         {
             case BASIC:
                 ss << "BASIC";

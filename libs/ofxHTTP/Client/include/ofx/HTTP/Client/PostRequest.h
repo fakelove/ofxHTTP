@@ -60,8 +60,6 @@ public:
 protected:
     virtual void prepareRequest(Poco::Net::HTTPRequest& request) const;
 
-
-
     Poco::Net::NameValueCollection _formFiles;
 
     friend class BaseClient;

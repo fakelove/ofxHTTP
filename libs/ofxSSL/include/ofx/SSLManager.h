@@ -55,9 +55,9 @@ public:
         SSLManager::instance(); // make sure it is instantiated
         Poco::Net::SSLManager& manager = Poco::Net::SSLManager::instance();
 
-        manager.ServerVerificationError      += Poco::delegate(listener, &ListenerClass::onServerVerificationError);
-        manager.ClientVerificationError      += Poco::delegate(listener, &ListenerClass::onClientVerificationError);
-        manager.PrivateKeyPassphraseRequired += Poco::delegate(listener, &ListenerClass::onPrivateKeyPassphraseRequired);
+        manager.ServerVerificationError      += Poco::delegate(listener, &ListenerClass::onSSLServerVerificationError);
+        manager.ClientVerificationError      += Poco::delegate(listener, &ListenerClass::onSSLClientVerificationError);
+        manager.PrivateKeyPassphraseRequired += Poco::delegate(listener, &ListenerClass::onSSLPrivateKeyPassphraseRequired);
     }
 
     template<class ListenerClass>
@@ -66,9 +66,9 @@ public:
         SSLManager::instance(); // make sure it is instantiated
         Poco::Net::SSLManager& manager = Poco::Net::SSLManager::instance();
 
-        manager.ServerVerificationError      -= Poco::delegate(listener, &ListenerClass::onServerVerificationError);
-        manager.ClientVerificationError      -= Poco::delegate(listener, &ListenerClass::onClientVerificationError);
-        manager.PrivateKeyPassphraseRequired -= Poco::delegate(listener, &ListenerClass::onPrivateKeyPassphraseRequired);
+        manager.ServerVerificationError      -= Poco::delegate(listener, &ListenerClass::onSSLServerVerificationError);
+        manager.ClientVerificationError      -= Poco::delegate(listener, &ListenerClass::onSSLClientVerificationError);
+        manager.PrivateKeyPassphraseRequired -= Poco::delegate(listener, &ListenerClass::onSSLPrivateKeyPassphraseRequired);
     }
 
     template<class ListenerClass>

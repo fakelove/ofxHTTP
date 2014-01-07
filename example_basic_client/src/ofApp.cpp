@@ -35,25 +35,30 @@ void ofApp::setup()
 
     HTTP::Client::Context::SharedPtr context = HTTP::Client::Context::makeShared();
 
-    std::string username = "username";
-    std::string password = "password";
+//    std::string username = "username";
+//    std::string password = "password";
 
 //    std::string url = "https://httpbin.org/relative-redirect/19";
 //    std::string url = "https://httpbin.org/basic-auth/" +  username +  "/" + password;
 //    std::string url = "https://httpbin.org/hidden-basic-auth/" +  username +  "/" + password;
 //    std::string url = "https://httpbin.org/digest-auth/auth/" +  username +  "/" + password;
 
-    std::string url = "http://requestb.in/nwmp0snw";
+//    context->getSessionSettingsRef().setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.41 Safari/537.36");
+
+    context->getSessionSettingsRef().setUserAgent("curl/7.30.0");
 
 
+    std::string url = "https://www.google.com/calendar/ical/christopherbaker.net_91ul9n5dq2b6pkmin511q3bq14%40group.calendar.google.com/public/basic.ics";
 
     Poco::URI uri(url);
 
-    HTTP::Client::PostRequest get(uri);
+    HTTP::Client::GetRequest get(uri);
 
-    get.addCookie("pinkcookie");
 
-    get.addHeader("header","beader");
+//
+//    get.addCookie("pinkcookie");
+//
+//    get.addHeader("header","beader");
 
 //    HTTP::AuthScope scope(uri.getScheme(),
 //                          uri.getHost(),
@@ -112,6 +117,11 @@ void ofApp::setup()
 
 }
 
+void ofApp::exit()
+{
+    ofx::SSLManager::unregisterAllEvents(this);
+}
+
 //------------------------------------------------------------------------------
 void ofApp::update()
 {
@@ -168,7 +178,7 @@ void ofApp::dragEvent(ofDragInfo dragInfo)
 }
 
 //------------------------------------------------------------------------------
-void ofApp::onServerVerificationError(Poco::Net::VerificationErrorArgs& args)
+void ofApp::onSSLServerVerificationError(Poco::Net::VerificationErrorArgs& args)
 {
     ofLogVerbose("ofApp::onServerVerificationError") << args.errorMessage();
 
@@ -179,7 +189,7 @@ void ofApp::onServerVerificationError(Poco::Net::VerificationErrorArgs& args)
 }
 
 //------------------------------------------------------------------------------
-void ofApp::onClientVerificationError(Poco::Net::VerificationErrorArgs& args)
+void ofApp::onSSLClientVerificationError(Poco::Net::VerificationErrorArgs& args)
 {
     ofLogVerbose("ofApp::onClientVerificationError") << args.errorMessage();
 
@@ -212,7 +222,7 @@ void ofApp::onClientVerificationError(Poco::Net::VerificationErrorArgs& args)
 }
 
 //------------------------------------------------------------------------------
-void ofApp::onPrivateKeyPassphraseRequired(std::string& args)
+void ofApp::onSSLPrivateKeyPassphraseRequired(std::string& args)
 {
     ofLogVerbose("ofApp::onPrivateKeyPassphraseRequired") << args;
 

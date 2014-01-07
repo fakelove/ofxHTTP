@@ -79,8 +79,8 @@ public:
     void setProxyHost(const std::string& host);
     std::string getProxyHost() const;
     
-    void setProxyPort(unsigned short port);
-    unsigned short getProxyPort() const;
+    void setProxyPort(uint16_t port);
+    uint16_t getProxyPort() const;
     
     bool hasProxyCredentials() const;
     bool isProxyEnabled() const;
@@ -108,7 +108,6 @@ private:
     std::string _userAgent;
 
     int _maxRedirects;
-    
 
     Poco::Timespan _keepAliveTimeout;
 

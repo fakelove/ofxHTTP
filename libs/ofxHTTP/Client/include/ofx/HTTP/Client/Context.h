@@ -93,8 +93,8 @@ public:
     }
 
 private:
-    Context(const Context& that);
-	Context& operator = (const Context& that);
+    Context(const Context& other);
+	Context& operator = (const Context& other);
 
     // client settings (i.e. thread pools, # connections, etc).
     // vs. context-settings (num redirects, auth handlers, etc).
@@ -102,7 +102,7 @@ private:
     SessionSettings _sessionSettings;
     CredentialStore _credentialStore;
     
-    CookieStore     _cookieStore;
+    CookieStore _cookieStore;
 
 };
 

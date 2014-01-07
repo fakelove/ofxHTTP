@@ -34,14 +34,14 @@ const std::string   ProxySettings::DEFAULT_PROXY_HOST = "127.0.0.1";
 const uint16_t      ProxySettings::DEFAULT_PROXY_PORT = 8909;
 
 
-//------------------------------------------------------------------------------
+
 ProxySettings::ProxySettings():
     _host(DEFAULT_PROXY_HOST),
     _port(DEFAULT_PROXY_PORT)
 {
 }
 
-//------------------------------------------------------------------------------
+
 ProxySettings::ProxySettings(const std::string& host,
                              uint16_t port):
     _host(host),
@@ -49,7 +49,7 @@ ProxySettings::ProxySettings(const std::string& host,
 {
 }
 
-//------------------------------------------------------------------------------
+
 ProxySettings::ProxySettings(const std::string& username,
                              const std::string& password,
                              const std::string& host,
@@ -60,12 +60,12 @@ ProxySettings::ProxySettings(const std::string& username,
 {
 }
 
-//------------------------------------------------------------------------------
+
 ProxySettings::~ProxySettings()
 {
 }
 
-//------------------------------------------------------------------------------
+
 void ProxySettings::clear()
 {
     Credentials::clear();
@@ -73,25 +73,25 @@ void ProxySettings::clear()
     _port = DEFAULT_PROXY_PORT;
 }
 
-//------------------------------------------------------------------------------
+
 std::string ProxySettings::getHost() const
 {
     return _host;
 }
 
-//------------------------------------------------------------------------------
+
 void ProxySettings::setHost(const std::string& host)
 {
     _host = host;
 }
 
-//------------------------------------------------------------------------------
+
 uint16_t ProxySettings::getPort() const
 {
     return _port;
 }
 
-//------------------------------------------------------------------------------
+
 void ProxySettings::setPort(uint16_t port)
 {
     _port = port;

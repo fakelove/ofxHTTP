@@ -30,14 +30,14 @@ namespace ofx {
 namespace HTTP {
         
 
-//------------------------------------------------------------------------------
+
 Cookie::Cookie(const Poco::Net::HTTPCookie& cookie):
     Poco::Net::HTTPCookie(cookie),
     _createdAt(Poco::Timestamp())
 {
 }
 
-//------------------------------------------------------------------------------
+
 Cookie::Cookie(const Poco::Net::HTTPCookie& cookie,
                Poco::Timestamp createdAt):
     Poco::Net::HTTPCookie(cookie),
@@ -45,18 +45,18 @@ Cookie::Cookie(const Poco::Net::HTTPCookie& cookie,
 {
 }
 
-//------------------------------------------------------------------------------
+
 Cookie::~Cookie()
 {
 }
 
-//------------------------------------------------------------------------------
+
 Poco::Timestamp Cookie::getCreatedAt() const
 {
     return _createdAt;
 }
 
-//------------------------------------------------------------------------------
+
 bool Cookie::isExpired(Poco::Timestamp expiredAt) const
 {
     int maxAge = getMaxAge();
@@ -64,7 +64,7 @@ bool Cookie::isExpired(Poco::Timestamp expiredAt) const
     return maxAge >= 0 && expiredAt > ( _createdAt + ( maxAge / 1000 ) );
 }
 
-//------------------------------------------------------------------------------
+
 bool Cookie::isSession() const
 {
     // based on Poco::Net::HTTPCookie
@@ -74,7 +74,7 @@ bool Cookie::isSession() const
     return getMaxAge() < 0;
 }
 
-//------------------------------------------------------------------------------
+
 bool Cookie::matchesDomain(const Poco::URI& uri) const
 {
     // https://code.google.com/p/gdata-java-client/source/browse/trunk/java/src/com/google/gdata/client/http/GoogleGDataRequest.java
@@ -116,13 +116,13 @@ bool Cookie::matchesDomain(const Poco::URI& uri) const
     
 }
 
-//------------------------------------------------------------------------------
+
 bool Cookie::matchesPath(const Poco::URI& uri) const
 {
     return uri.getPath().find(getPath()) == 0;
 }
 
-//------------------------------------------------------------------------------
+
 bool Cookie::matchesURI(const Poco::URI& uri, bool matchSessionCookies) const
 {
 
@@ -142,7 +142,7 @@ bool Cookie::matchesURI(const Poco::URI& uri, bool matchSessionCookies) const
     return true;
 }
 
-//------------------------------------------------------------------------------
+
 bool Cookie::matches(const Cookie& other) const
 {
     bool isMatch = (getName() == other.getName());
@@ -176,7 +176,7 @@ bool Cookie::matches(const Cookie& other) const
 }
 
 
-//------------------------------------------------------------------------------
+
 std::string Cookie::toString() const
 {
     std::stringstream ss;
@@ -184,7 +184,7 @@ std::string Cookie::toString() const
     return ss.str();
 }
 
-//------------------------------------------------------------------------------
+
 bool Cookie::endsWith(const std::string& fullString, const std::string& ending)
 {
     if (fullString.length() >= ending.length())

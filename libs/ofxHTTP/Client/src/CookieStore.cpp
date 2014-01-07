@@ -30,19 +30,19 @@ namespace ofx {
 namespace HTTP {
 
     
-//------------------------------------------------------------------------------
+
 CookieStore::CookieStore()
 {
 }
 
-//------------------------------------------------------------------------------
+
 CookieStore::CookieStore(CookieStore& that)
 {
     Poco::FastMutex::ScopedLock thatLock(that.mutex);
     cookies = that.cookies;
 }
 
-//------------------------------------------------------------------------------
+
 CookieStore& CookieStore::operator = (CookieStore& that)
 {
     Poco::FastMutex::ScopedLock thisLock(mutex);
@@ -51,12 +51,12 @@ CookieStore& CookieStore::operator = (CookieStore& that)
     return *this;
 }
 
-//------------------------------------------------------------------------------
+
 CookieStore::~CookieStore()
 {
 }
 
-//------------------------------------------------------------------------------
+
 CookieStore::Cookies CookieStore::getCookesForURI(const Poco::URI& uri,
                                                   bool bMatchSessionCookes) const
 {
@@ -81,7 +81,7 @@ CookieStore::Cookies CookieStore::getCookesForURI(const Poco::URI& uri,
     return matchingCookies;
 }
 
-//------------------------------------------------------------------------------
+
 void CookieStore::store(const Poco::Net::HTTPResponse& response)
 {
     std::vector<HTTPCookie> newCookies;
@@ -97,7 +97,7 @@ void CookieStore::store(const Poco::Net::HTTPResponse& response)
     }
 }
 
-//------------------------------------------------------------------------------
+
 void CookieStore::addCookie(const std::string& name,
                             const std::string& value,
                             bool isValueEscaped)
@@ -112,20 +112,20 @@ void CookieStore::addCookie(const std::string& name,
     addCookie(HTTPCookie(name,escapedValue));
 }
 
-//------------------------------------------------------------------------------
+
 void CookieStore::addCookie(const HTTPCookie& cookie)
 {
     addCookie(Cookie(cookie));
 }
 
-//------------------------------------------------------------------------------
+
 void CookieStore::addCookie(const Cookie& cookie)
 {
     Poco::FastMutex::ScopedLock lock(mutex);
     addCookieWithExistingLock(cookie);
 }
 
-//------------------------------------------------------------------------------
+
 void CookieStore::addCookieWithExistingLock(const Cookie& cookie)
 {
     if(cookie.isExpired()) return;
@@ -151,7 +151,7 @@ void CookieStore::addCookieWithExistingLock(const Cookie& cookie)
     }
 }
 
-//------------------------------------------------------------------------------
+
 bool CookieStore::clearExpired(unsigned long long expiredAt)
 {
     Poco::FastMutex::ScopedLock lock(mutex);
@@ -175,7 +175,7 @@ bool CookieStore::clearExpired(unsigned long long expiredAt)
     return didClear;
 }
 
-//------------------------------------------------------------------------------
+
 bool CookieStore::clearCookiesWithName(const std::string& name)
 {
     Poco::FastMutex::ScopedLock lock(mutex);
@@ -198,7 +198,7 @@ bool CookieStore::clearCookiesWithName(const std::string& name)
     return didClear;
 }
 
-//------------------------------------------------------------------------------
+
 bool CookieStore::clearCookiesWithDomain(const std::string& domain)
 {
     Poco::FastMutex::ScopedLock lock(mutex);
@@ -221,7 +221,7 @@ bool CookieStore::clearCookiesWithDomain(const std::string& domain)
     return didClear;
 }
 
-//------------------------------------------------------------------------------
+
 bool CookieStore::clearCookiesWithPath(const std::string& path)
 {
     Poco::FastMutex::ScopedLock lock(mutex);
@@ -244,7 +244,7 @@ bool CookieStore::clearCookiesWithPath(const std::string& path)
     return didClear;
 }
 
-//------------------------------------------------------------------------------
+
 void CookieStore::clear()
 {
     Poco::FastMutex::ScopedLock lock(mutex);

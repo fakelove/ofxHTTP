@@ -37,6 +37,7 @@ class ofApp: public ofBaseApp
 {
 public:
     void setup();
+    void exit();
     void update();
     void draw();
 
@@ -50,8 +51,8 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
-    void onServerVerificationError(Poco::Net::VerificationErrorArgs& args);
-    void onClientVerificationError(Poco::Net::VerificationErrorArgs& args);
-    void onPrivateKeyPassphraseRequired(std::string& args);
+    void onSSLServerVerificationError(Poco::Net::VerificationErrorArgs& args);
+    void onSSLClientVerificationError(Poco::Net::VerificationErrorArgs& args);
+    void onSSLPrivateKeyPassphraseRequired(std::string& args);
 
 };

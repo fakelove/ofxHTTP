@@ -198,29 +198,29 @@ class BaseServerSettings: public HTTPServerParams
 {
 public:
     BaseServerSettings(const std::string& host = DEFAULT_HOST,
-                       const unsigned short port = DEFAULT_PORT,
+                       const uint16_t port = DEFAULT_PORT,
                        bool useSSL = DEFAULT_USE_SSL);
     virtual ~BaseServerSettings();
 
     void setHost(const std::string& host);
     std::string getHost() const;
 
-    void setPort(const unsigned short port);
-    unsigned short getPort() const;
+    void setPort(const uint16_t port);
+    uint16_t getPort() const;
 
     void setUseSSL(bool useSSL);
     bool getUseSSL() const;
 
     Poco::URI getURI() const;
 
-    const static std::string    DEFAULT_HOST;
-    const static unsigned short DEFAULT_PORT;
-    const static bool           DEFAULT_USE_SSL;
+    const static std::string DEFAULT_HOST;
+    const static uint16_t    DEFAULT_PORT;
+    const static bool        DEFAULT_USE_SSL;
 
 private:
-    std::string      _host;
-    unsigned short   _port;
-    bool             _useSSL;
+    std::string _host;
+    uint16_t    _port;
+    bool        _useSSL;
 
 };
 
