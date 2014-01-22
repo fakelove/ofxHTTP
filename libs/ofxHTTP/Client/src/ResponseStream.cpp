@@ -115,11 +115,13 @@ ResponseStream::SharedPtr ResponseStream::createResponseStream(BaseRequest& http
 
                     if(httpRequest.getURI().getScheme() == "https")
                     {
-                        pClientSession = new HTTPSClientSession(httpRequest.getURI().getHost(), httpRequest.getURI().getPort());
+                        pClientSession = new HTTPSClientSession(httpRequest.getURI().getHost(),
+                                                                httpRequest.getURI().getPort());
                     }
                     else
                     {
-                        pClientSession = new HTTPClientSession(httpRequest.getURI().getHost(), httpRequest.getURI().getPort());
+                        pClientSession = new HTTPClientSession(httpRequest.getURI().getHost(),
+                                                               httpRequest.getURI().getPort());
                     }
 
                     ofLogVerbose("ResponseStream::createResponseStream") << "New session created - host: " <<
