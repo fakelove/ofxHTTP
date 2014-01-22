@@ -234,10 +234,11 @@ void BaseServer_<SettingsType>::start()
 
     _isSecurePort = socket.secure();
 
-#if defined(TARGET_OSX)
-    // essential on a mac!  fixed in 1.4.6p2+ / 1.5.2+
-    socket.setOption(SOL_SOCKET, SO_NOSIGPIPE, 1); // ignore SIGPIPE
-#endif
+    #if defined(POCO_OS_FAMILY_UNIX)
+    // essential on early versions of Poco!  fixed in 1.4.6p2+ / 1.5.2+
+    // https://github.com/pocoproject/poco/issues/235
+    pSocket->setOption(SOL_SOCKET, SO_NOSIGPIPE, 1); // ignore SIGPIPE
+    #endif
 
     // start the http server
     _server->start();
