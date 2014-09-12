@@ -107,6 +107,9 @@ void BaseRequest::prepareRequest()
     {
         setURI(uri.substr(0, uri.size() - 1));
     }
+    
+    Poco::URI reqUri(uri);
+    setURI(reqUri.getPathAndQuery());
 }
 
 
