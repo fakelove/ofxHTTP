@@ -31,141 +31,148 @@
 
 
 namespace ofx {
-namespace HTTP {
-
-
-DefaultClientTask::DefaultClientTask(BaseRequest* request,
-                                     BaseResponse* response,
-                                     Context* context):
-    DefaultClient(),
-    Poco::Task(request->getURI()),
-    _request(request),
-    _response(response),
-    _context(context)
-{
-}
-
-
-DefaultClientTask::~DefaultClientTask()
-{
-    delete _request;
-    delete _response;
-    delete _context;
-}
-
-
-void DefaultClientTask::runTask()
-{
-    registerClientEvents(this);
-    registerClientProgressEvents(this);
-    registerClientFilterEvents(this);
-
-    submit(*_request, *_response, *_context);
-
-    unregisterClientFilterEvents(this);
-    unregisterClientProgressEvents(this);
-    unregisterClientEvents(this);
-}
-
-
-bool DefaultClientTask::onHTTPClientResponseEvent(HTTP::ClientResponseEventArgs& args)
-{
-    const std::size_t bufferSize = IO::ByteBufferUtils::DEFAULT_BUFFER_SIZE;
-
-    std::istream& istr = args.getResponseStream();
-
-    std::streamsize contentLength = args.getResponse().getContentLength();
-
-    IO::ByteBuffer _byteBuffer;
-
-    if (contentLength > 0)
-    {
-        _byteBuffer.reserve(contentLength);
-    }
-
-    Poco::Buffer<char> buffer(bufferSize);
-    std::streamsize len = 0;
-	istr.read(buffer.begin(), bufferSize);
-    std::streamsize n = istr.gcount();
-    while (n > 0)
-	{
-		len += n;
-        _byteBuffer.writeBytes(reinterpret_cast<uint8_t*>(buffer.begin()), n);
-
-        // Check for task cancellation.
-        if (istr && !isCancelled())
-		{
-			istr.read(buffer.begin(), bufferSize);
-            n = istr.gcount();
-		}
-        else
+    namespace HTTP {
+        
+        
+        DefaultClientTask::DefaultClientTask(BaseRequest* request,
+                                             BaseResponse* response,
+                                             Context* context):
+        DefaultClient(),
+        Poco::Task(request->getURI()),
+        _request(request),
+        _response(response),
+        _context(context)
         {
-            n = 0;
         }
-	}
-
-    // Don't return cancelled data.
-    if (!isCancelled())
-    {
-        ClientResponseBufferEventArgs bufferEvent(_byteBuffer,
-                                                  args.getRequest(),
-                                                  args.getResponse(),
-                                                  args.getContextRef());
-
-        postNotification(new Poco::TaskCustomNotification<HTTP::ClientResponseBufferEventArgs>(this, bufferEvent));
-    }
-
-    return true;
-}
-
-
-bool DefaultClientTask::onHTTPClientErrorEvent(HTTP::ClientErrorEventArgs& args)
-{
-    throw args.getException();
-    return true;
-}
-
-
-bool DefaultClientTask::onHTTPClientRequestProgress(HTTP::ClientRequestProgressArgs& args)
-{
-    if (args.getProgress() == Poco::Net::HTTPMessage::UNKNOWN_CONTENT_LENGTH)
-    {
-        setProgress(0);
-    }
-    else
-    {
-        setProgress(args.getProgress());
-    }
-
-    return true;
-}
-
-
-bool DefaultClientTask::onHTTPClientResponseProgress(HTTP::ClientResponseProgressArgs& args)
-{
-    if (args.getProgress() == Poco::Net::HTTPMessage::UNKNOWN_CONTENT_LENGTH)
-    {
-        setProgress(0);
-    }
-    else
-    {
-        setProgress(args.getProgress());
-    }
-
-    return true;
-}
-
-
-bool DefaultClientTask::onHTTPClientRequestFilterEvent(HTTP::MutableClientRequestArgs& args)
-{
-    return true;
-}
-
-
-bool DefaultClientTask::onHTTPClientResponseFilterEvent(HTTP::MutableClientResponseArgs& args)
-{
-    return true;
-}
-
-
-} } // namespace ofx::HTTP
+        
+        
+        DefaultClientTask::~DefaultClientTask()
+        {
+            delete _request;
+            delete _response;
+            delete _context;
+        }
+        
+        
+        void DefaultClientTask::runTask()
+        {
+            registerClientEvents(this);
+            registerClientProgressEvents(this);
+            registerClientFilterEvents(this);
+            
+            submit(*_request, *_response, *_context);
+            
+            unregisterClientFilterEvents(this);
+            unregisterClientProgressEvents(this);
+            unregisterClientEvents(this);
+        }
+        
+        
+        bool DefaultClientTask::onHTTPClientResponseEvent(HTTP::ClientResponseEventArgs& args)
+        {
+            const std::size_t bufferSize = IO::ByteBufferUtils::DEFAULT_BUFFER_SIZE;
+            
+            std::istream& istr = args.getResponseStream();
+            
+            std::streamsize contentLength = args.getResponse().getContentLength();
+            
+            IO::ByteBuffer _byteBuffer;
+            
+            if (contentLength > 0)
+            {
+                _byteBuffer.reserve(contentLength);
+            }
+            
+            Poco::Buffer<char> buffer(bufferSize);
+            std::streamsize len = 0;
+            istr.read(buffer.begin(), bufferSize);
+            std::streamsize n = istr.gcount();
+            while (n > 0)
+            {
+                len += n;
+                _byteBuffer.writeBytes(reinterpret_cast<uint8_t*>(buffer.begin()), n);
+                
+                // Check for task cancellation.
+                if (istr && !isCancelled())
+                {
+                    istr.read(buffer.begin(), bufferSize);
+                    n = istr.gcount();
+                }
+                else
+                {
+                    n = 0;
+                }
+            }
+            
+            // Don't return cancelled data.
+            if (!isCancelled())
+            {
+                ClientResponseBufferEventArgs bufferEvent(_byteBuffer,
+                                                          args.getRequest(),
+                                                          args.getResponse(),
+                                                          args.getContextRef());
+                
+                postNotification(new Poco::TaskCustomNotification<HTTP::ClientResponseBufferEventArgs>(this, bufferEvent));
+            }
+            
+            return true;
+        }
+        
+        
+        bool DefaultClientTask::onHTTPClientErrorEvent(HTTP::ClientErrorEventArgs& args)
+        {
+            throw args.getException();
+            return true;
+        }
+        
+        
+        bool DefaultClientTask::onHTTPClientRequestProgress(HTTP::ClientRequestProgressArgs& args)
+        {
+            if (args.getProgress() == Poco::Net::HTTPMessage::UNKNOWN_CONTENT_LENGTH)
+            {
+                setProgress(0);
+            }
+            else
+            {
+                setProgress(args.getProgress());
+            }
+            
+            return true;
+        }
+        
+        
+        bool DefaultClientTask::onHTTPClientResponseProgress(HTTP::ClientResponseProgressArgs& args)
+        {
+            if (args.getProgress() == Poco::Net::HTTPMessage::UNKNOWN_CONTENT_LENGTH)
+            {
+                setProgress(0);
+            }
+            else
+            {
+                setProgress(args.getProgress());
+            }
+            
+            return true;
+        }
+        
+        
+        bool DefaultClientTask::onHTTPClientRequestFilterEvent(HTTP::MutableClientRequestArgs& args)
+        {
+            return true;
+        }
+        
+        
+        bool DefaultClientTask::onHTTPClientResponseFilterEvent(HTTP::MutableClientResponseArgs& args)
+        {
+            return true;
+        }
+        
+        void DefaultClientTask::addRequestFilter(AbstractRequestFilter* _filter){
+            filter = _filter;
+            DefaultClient::addRequestFilter(filter);
+        }
+        
+        
+        
+        
+    } } // namespace ofx::HTTP

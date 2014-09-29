@@ -82,6 +82,8 @@ public:
     /// has been submitted.
     ///
     /// \returns a UUID associated with the BaseRequest.
+    void addRequestFilter(AbstractRequestFilter* filter);
+    
     Poco::UUID request(BaseRequest* pRequest,
                        ThreadSettings threadSettings = ThreadSettings());
 
@@ -108,7 +110,7 @@ private:
 
     Context* createDefaultContext();
     BaseResponse* createDefaultResponse();
-
+    AbstractRequestFilter* filter;
 };
 
 

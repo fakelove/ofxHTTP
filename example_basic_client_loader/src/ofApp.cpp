@@ -35,9 +35,9 @@ void ofApp::setup()
     clientTaskQueue.registerAllEvents(this);
 
     // Lauch three large download tasks.
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < 1; ++i)
     {
-        std::string url = "http://peach.blender.org/wp-content/uploads/big_big_buck_bunny.jpg";
+        std::string url = "http://10.11.12.13/static/asattachment/mnt/sdcard/DCIM/slomo_1411418369.mov";
 
         // We can use this taskId to cancel the task or keep track of its
         // progress.  In this example, we register the taskId in the

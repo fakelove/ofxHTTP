@@ -27,116 +27,120 @@
 
 
 namespace ofx {
-namespace HTTP {
-
-
-DefaultClientTaskQueue::DefaultClientTaskQueue(int maxTasks,
-                                               Poco::ThreadPool& threadPool):
-    TaskQueue_<Poco::UUID>(maxTasks, threadPool)
-{
-}
-
-DefaultClientTaskQueue::~DefaultClientTaskQueue()
-{
-}
-
-
-Poco::UUID DefaultClientTaskQueue::get(const std::string& uri,
-                                       const Poco::Net::NameValueCollection& formFields,
-                                       const std::string& httpVersion,
-                                       const Poco::UUID& requestId,
-                                       ThreadSettings threadSettings)
-{
-
-    GetRequest* req = new GetRequest(uri,
-                                     formFields,
-                                     httpVersion,
-                                     requestId);
-
-    return request(req, threadSettings);
-}
-
-
-Poco::UUID DefaultClientTaskQueue::post(const std::string& uri,
-                                        const Poco::Net::NameValueCollection formFields,
-                                        const PostRequest::FormParts formParts,
-                                        const std::string& httpVersion,
-                                        const Poco::UUID& requestId,
-                                        ThreadSettings threadSettings)
-{
-    return request(new PostRequest(uri,
-                                   formFields,
-                                   formParts,
-                                   httpVersion,
-                                   requestId),
-                                   threadSettings);
-}
-
-
-Poco::UUID DefaultClientTaskQueue::request(BaseRequest* pRequest,
-                                           ThreadSettings threadSettings)
-{
-
-    DefaultClientTask* task = new DefaultClientTask(pRequest,
-                                                    createDefaultResponse(),
-                                                    createDefaultContext());
-
-
-
-    return start(Poco::UUIDGenerator::defaultGenerator().createOne(), task);
-}
-
-
-void DefaultClientTaskQueue::handleTaskCustomNotification(const Poco::UUID& taskID,
-                                                          Poco::AutoPtr<Poco::TaskNotification> pNotification)
-{
-    Poco::AutoPtr<Poco::TaskCustomNotification<ClientResponseBufferEventArgs> > taskCustomNotification = 0;
-
-    if (!(taskCustomNotification = pNotification.cast<Poco::TaskCustomNotification<ClientResponseBufferEventArgs> >()).isNull())
-    {
-        TaskDataEventArgs_<Poco::UUID, ClientResponseBufferEventArgs> args(taskID,
-                                                                           pNotification->task()->name(),
-                                                                           pNotification->task()->state(),
-                                                                           pNotification->task()->progress(),
-                                                                           taskCustomNotification->custom());
-
-        ofNotifyEvent(onClientBuffer, args, this);
-
-    }
-    else
-    {
-        TaskCustomNotificationEventArgs_<Poco::UUID> args(taskID,
-                                                          pNotification->task()->name(),
-                                                          pNotification->task()->state(),
-                                                          pNotification->task()->progress(),
-                                                          pNotification);
-
-        ofNotifyEvent(TaskQueue_<Poco::UUID>::onTaskCustomNotification, args, this);
-
-    }
-}
-
-
-
-Context* DefaultClientTaskQueue::createDefaultContext()
-{
-    // TODO, attach context info here.
-
-    Context* c = new Context();
-
-//    ofx::HTTP::SessionSettings sessionSettings;
-//    sessionSettings.setProxy(ofx::HTTP::ProxySettings("127.0.0.1", 8888));
-//
-//    c->setSessionSettings(sessionSettings);
-
-    return c;
-}
-
-
-BaseResponse* DefaultClientTaskQueue::createDefaultResponse()
-{
-    return new BaseResponse();
-}
-
-
-} } // namespace ofx::HTTP
+    namespace HTTP {
+        
+        
+        DefaultClientTaskQueue::DefaultClientTaskQueue(int maxTasks,
+                                                       Poco::ThreadPool& threadPool):
+        TaskQueue_<Poco::UUID>(maxTasks, threadPool)
+        {
+        }
+        
+        DefaultClientTaskQueue::~DefaultClientTaskQueue()
+        {
+        }
+        
+        
+        Poco::UUID DefaultClientTaskQueue::get(const std::string& uri,
+                                               const Poco::Net::NameValueCollection& formFields,
+                                               const std::string& httpVersion,
+                                               const Poco::UUID& requestId,
+                                               ThreadSettings threadSettings)
+        {
+            
+            GetRequest* req = new GetRequest(uri,
+                                             formFields,
+                                             httpVersion,
+                                             requestId);
+            
+            return request(req, threadSettings);
+        }
+        
+        
+        Poco::UUID DefaultClientTaskQueue::post(const std::string& uri,
+                                                const Poco::Net::NameValueCollection formFields,
+                                                const PostRequest::FormParts formParts,
+                                                const std::string& httpVersion,
+                                                const Poco::UUID& requestId,
+                                                ThreadSettings threadSettings)
+        {
+            return request(new PostRequest(uri,
+                                           formFields,
+                                           formParts,
+                                           httpVersion,
+                                           requestId),
+                           threadSettings);
+        }
+        
+        
+        Poco::UUID DefaultClientTaskQueue::request(BaseRequest* pRequest,
+                                                   ThreadSettings threadSettings)
+        {
+            
+            DefaultClientTask* task = new DefaultClientTask(pRequest,
+                                                            createDefaultResponse(),
+                                                            createDefaultContext());
+            if(filter){
+                task->addRequestFilter(filter);
+            }
+            return start(Poco::UUIDGenerator::defaultGenerator().createOne(), task);
+        }
+        
+        void DefaultClientTaskQueue::addRequestFilter(AbstractRequestFilter* _filter){
+            filter = _filter;
+            
+        }
+        
+        void DefaultClientTaskQueue::handleTaskCustomNotification(const Poco::UUID& taskID,
+                                                                  Poco::AutoPtr<Poco::TaskNotification> pNotification)
+        {
+            Poco::AutoPtr<Poco::TaskCustomNotification<ClientResponseBufferEventArgs> > taskCustomNotification = 0;
+            
+            if (!(taskCustomNotification = pNotification.cast<Poco::TaskCustomNotification<ClientResponseBufferEventArgs> >()).isNull())
+            {
+                TaskDataEventArgs_<Poco::UUID, ClientResponseBufferEventArgs> args(taskID,
+                                                                                   pNotification->task()->name(),
+                                                                                   pNotification->task()->state(),
+                                                                                   pNotification->task()->progress(),
+                                                                                   taskCustomNotification->custom());
+                
+                ofNotifyEvent(onClientBuffer, args, this);
+                
+            }
+            else
+            {
+                TaskCustomNotificationEventArgs_<Poco::UUID> args(taskID,
+                                                                  pNotification->task()->name(),
+                                                                  pNotification->task()->state(),
+                                                                  pNotification->task()->progress(),
+                                                                  pNotification);
+                
+                ofNotifyEvent(TaskQueue_<Poco::UUID>::onTaskCustomNotification, args, this);
+                
+            }
+        }
+        
+        
+        
+        Context* DefaultClientTaskQueue::createDefaultContext()
+        {
+            // TODO, attach context info here.
+            
+            Context* c = new Context();
+            
+            //    ofx::HTTP::SessionSettings sessionSettings;
+            //    sessionSettings.setProxy(ofx::HTTP::ProxySettings("127.0.0.1", 8888));
+            //
+            //    c->setSessionSettings(sessionSettings);
+            
+            return c;
+        }
+        
+        
+        BaseResponse* DefaultClientTaskQueue::createDefaultResponse()
+        {
+            return new BaseResponse();
+        }
+        
+        
+    } } // namespace ofx::HTTP

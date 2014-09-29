@@ -56,12 +56,14 @@ public:
 
     bool onHTTPClientRequestFilterEvent(MutableClientRequestArgs& args);
     bool onHTTPClientResponseFilterEvent(MutableClientResponseArgs& args);
+    void addRequestFilter(AbstractRequestFilter* _filter);
+
 
 private:
     BaseRequest* _request;
     BaseResponse* _response;
     Context* _context;
-
+    AbstractRequestFilter* filter;
 };
 
 
