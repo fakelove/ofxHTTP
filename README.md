@@ -1,5 +1,7 @@
 ofxHTTP
 =======
+THIS BRANCH "working-master" IS USED FOR ABBOTT POD APPS - 3/17/2015
+
 
 ofxHTTP is designed to work best using Project Generator.
 
